@@ -5,6 +5,7 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from io import BytesIO
 import calendar
 from datetime import datetime
+import os # Necessário para verificar se a imagem existe
 
 # IMPORTAÇÃO DO CURRÍCULO
 try:
@@ -54,24 +55,21 @@ with st.sidebar:
 
     # --- CONFIGURAÇÃO DE TURMAS ---
     qtd_turmas_por_ano = {
-        "Maternal II": 2, # 2 turmas
-        "Etapa I": 3,     # 3 turmas
-        "Etapa II": 3,    # 3 turmas
-        "1º Ano": 3,      # 3 turmas
-        "2º Ano": 3,      # 3 turmas
-        "3º Ano": 3,      # 3 turmas
-        "4º Ano": 3,      # 3 turmas
-        "5º Ano": 3       # 3 turmas
+        "Maternal II": 2,
+        "Etapa I": 3,
+        "Etapa II": 3,
+        "1º Ano": 3,
+        "2º Ano": 3,
+        "3º Ano": 3,
+        "4º Ano": 3,
+        "5º Ano": 3
     }
     
     max_turmas = qtd_turmas_por_ano.get(nivel_selecionado, 3)
     
-    # Gera nomes das turmas baseado no nível
     if "Maternal" in nivel_selecionado or "Etapa" in nivel_selecionado:
-         # Ex: "Etapa I - 1"
          opcoes_turmas = [f"{nivel_selecionado} - {i}" for i in range(1, max_turmas + 1)]
     else:
-         # Ex: "1º Ano 1"
          opcoes_turmas = [f"{nivel_selecionado} {i}" for i in range(1, max_turmas + 1)]
 
     turmas_selecionadas = st.multiselect(
@@ -255,6 +253,7 @@ with c4:
 def gerar_docx(conteudos, dados_extras):
     doc = Document()
     
+    # Configuração de Margens
     sections = doc.sections
     for section in sections:
         section.top_margin = Cm(1.0)
@@ -267,17 +266,56 @@ def gerar_docx(conteudos, dados_extras):
     font.name = 'Arial'
     font.size = Pt(10)
 
-    # Cabeçalho
-    p = doc.add_paragraph()
-    p.paragraph_format.space_before = Pt(0)
-    p.paragraph_format.space_after = Pt(0)
-    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p.add_run('PREFEITURA MUNICIPAL DE LIMEIRA\n').bold = True
-    p.add_run('CEIEF RAFAEL AFFONSO LEITE\n').bold = True
-    p.add_run('Planejamento de Linguagens e Tecnologias')
+    # --- CABEÇALHO COM LOGOS ---
+    # Tenta carregar imagens da pasta local
+    logo_prefeitura = "logo_prefeitura.png" # ou .jpg
+    logo_escola = "logo_escola.png"         # ou .jpg
+
+    # Verifica se existem arquivos com extensões comuns
+    if not os.path.exists(logo_prefeitura) and os.path.exists("logo_prefeitura.jpg"):
+        logo_prefeitura = "logo_prefeitura.jpg"
+    if not os.path.exists(logo_escola) and os.path.exists("logo_escola.jpg"):
+        logo_escola = "logo_escola.jpg"
+
+    # Tabela do Cabeçalho (3 colunas: Logo Esq | Texto | Logo Dir)
+    header_table = doc.add_table(rows=1, cols=3)
+    header_table.autofit = False
+    
+    # Coluna 1: Logo Prefeitura
+    cell_left = header_table.cell(0, 0)
+    cell_left.width = Cm(2.5)
+    if os.path.exists(logo_prefeitura):
+        try:
+            p_img = cell_left.paragraphs[0]
+            r = p_img.add_run()
+            r.add_picture(logo_prefeitura, width=Cm(2.0))
+        except:
+            pass # Se der erro na imagem, segue sem ela
+
+    # Coluna 2: Texto Centralizado
+    cell_center = header_table.cell(0, 1)
+    cell_center.width = Cm(13.0)
+    p_header = cell_center.paragraphs[0]
+    p_header.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p_header.add_run('PREFEITURA MUNICIPAL DE LIMEIRA\n').bold = True
+    p_header.add_run('CEIEF RAFAEL AFFONSO LEITE\n').bold = True
+    p_header.add_run('Planejamento de Linguagens e Tecnologias')
+
+    # Coluna 3: Logo Escola
+    cell_right = header_table.cell(0, 2)
+    cell_right.width = Cm(2.5)
+    if os.path.exists(logo_escola):
+        try:
+            p_img_r = cell_right.paragraphs[0]
+            p_img_r.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+            r_r = p_img_r.add_run()
+            r_r.add_picture(logo_escola, width=Cm(2.0))
+        except:
+            pass
+
+    doc.add_paragraph() # Espaço após cabeçalho
 
     # Identificação
-    doc.add_paragraph()
     p_info = doc.add_paragraph()
     p_info.add_run(f'Período: {dados_extras["Periodo"]}\n')
     p_info.add_run(f'Professor(a): {dados_extras["Professor"]}\n')
@@ -350,7 +388,6 @@ if st.button("Gerar Arquivo Word"):
         
         arq = gerar_docx(st.session_state.conteudos_selecionados, dados)
         
-        # Nome do arquivo mais limpo
         safe_turmas = turmas_texto.replace(' ', '').replace(',', '_')
         if len(safe_turmas) > 20: safe_turmas = "Multiplas_Turmas"
         nome_arquivo = f"Plan_{nivel_selecionado}_{safe_turmas}.docx"
@@ -361,6 +398,6 @@ if st.button("Gerar Arquivo Word"):
 # --- RODAPÉ ---
 st.markdown("""
     <div class="footer">
-        Desenvolvido por <b>José Victor Souza Gallo</b> | CEIEF Rafael Affonso Leite © 2025
+        Desenvolvido por <b>Victor</b> | CEIEF Rafael Affonso Leite © 2025
     </div>
 """, unsafe_allow_html=True)
