@@ -30,8 +30,24 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="main-header">CEIEF RAFAEL AFFONSO LEITE</div>', unsafe_allow_html=True)
-st.markdown('<div class="sub-header">Planejamento de Linguagens e Tecnologias</div>', unsafe_allow_html=True)
+# --- CABEÇALHO VISUAL NO APP ---
+col_h1, col_h2, col_h3 = st.columns([1, 6, 1])
+
+with col_h1:
+    if os.path.exists("logo_prefeitura.png"):
+        st.image("logo_prefeitura.png", use_container_width=True)
+    elif os.path.exists("logo_prefeitura.jpg"):
+        st.image("logo_prefeitura.jpg", use_container_width=True)
+
+with col_h2:
+    st.markdown('<div class="main-header">CEIEF RAFAEL AFFONSO LEITE</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">Planejamento de Linguagens e Tecnologias</div>', unsafe_allow_html=True)
+
+with col_h3:
+    if os.path.exists("logo_escola.png"):
+        st.image("logo_escola.png", use_container_width=True)
+    elif os.path.exists("logo_escola.jpg"):
+        st.image("logo_escola.jpg", use_container_width=True)
 
 # --- 2. INICIALIZAÇÃO ---
 if 'conteudos_selecionados' not in st.session_state:
