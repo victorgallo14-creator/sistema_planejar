@@ -471,7 +471,8 @@ def gerar_docx(conteudos, dados):
 st.markdown("<br>", unsafe_allow_html=True)
 
 if st.button("GERAR DOCUMENTO WORD", type="primary", use_container_width=True):
-    if not professor or not situacao_didatica or not conteudos_selecionados := st.session_state.conteudos_selecionados:
+    conteudos_selecionados = st.session_state.conteudos_selecionados
+    if not professor or not situacao_didatica or not conteudos_selecionados:
         st.error("Preencha o professor, a situação didática e adicione conteúdos.")
     elif not turmas:
         st.error("Selecione as turmas.")
