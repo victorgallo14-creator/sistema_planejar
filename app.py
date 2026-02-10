@@ -444,15 +444,20 @@ def render_step3():
             
     with c_final:
         if st.button("🚀 Gerar Documento Oficial", type="primary", use_container_width=True):
+            # Correção do erro de sintaxe e validação
+            conteudos = st.session_state.conteudos_selecionados
+            
             if not situacao or not recursos or not recuperacao:
                 st.error("Preencha os campos obrigatórios!")
+            elif not conteudos:
+                 st.error("Nenhum conteúdo selecionado.")
             else:
                 # Prepara dados finais
                 final_data = st.session_state.config
                 final_data['Turmas'] = ", ".join(final_data['turmas'])
                 
                 # Gera DOC
-                doc_buffer = gerar_docx_premium(st.session_state.conteudos_selecionados, final_data)
+                doc_buffer = gerar_docx_premium(conteudos, final_data)
                 
                 st.balloons()
                 st.success("Documento gerado com sucesso!")
@@ -582,6 +587,7 @@ elif st.session_state.step == 3:
 # Rodapé Premium
 st.markdown("""
     <div style='margin-top: 50px; text-align: center; color: #94a3b8; font-size: 0.8rem; border-top: 1px solid #e2e8f0; padding-top: 20px;'>
+        Desenvolvido por <b>José Victor Souza Gallo</b><br>
         Sistema para uso interno e exclusivo do CEIEF Rafael Affonso Leite
     </div>
 """, unsafe_allow_html=True)
