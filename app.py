@@ -10,7 +10,7 @@ import base64
 
 # --- CONFIGURAÇÃO DA PÁGINA (WIDE MODE & TITLE) ---
 st.set_page_config(
-    page_title="EduPlan Pro | Limeira",
+    page_title="Sistema Planejar",
     layout="wide",
     page_icon="🎓",
     initial_sidebar_state="collapsed"
@@ -158,8 +158,8 @@ def render_header():
     st.markdown("""
     <div class="premium-header">
         <div class="header-text">
-            <h1>EduPlan Pro</h1>
-            <p>Sistema Integrado de Planejamento Pedagógico | CEIEF Rafael Affonso Leite</p>
+            <h1>Sistema Planejar</h1>
+            <p>Sistema interno - CEIEF Rafael Affonso Leite</p>
         </div>
         <div class="header-logo" style="font-size: 2.5rem;">
             🏫
@@ -553,6 +553,7 @@ elif st.session_state.step == 3:
 # Rodapé Premium
 st.markdown("""
     <div style='margin-top: 50px; text-align: center; color: #94a3b8; font-size: 0.8rem; border-top: 1px solid #e2e8f0; padding-top: 20px;'>
-        Desenvolvido com tecnologia <b>EduPlan Pro</b> • © 2025 Victor
+        <b>Sistema Planejar</b> • © 2025 José Victor Souza Gallo
     </div>
 """, unsafe_allow_html=True)
+
