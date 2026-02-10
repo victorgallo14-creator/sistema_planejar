@@ -224,11 +224,18 @@ def render_step1():
             
             anos = list(CURRICULO_DB.keys())
             nivel_idx = 0
-            if 'nivel' in st.session_state.config and st.session_state.config['nivel'] in anos:
-                nivel_idx = anos.index(st.session_state.config['nivel'])
+            # Garante que o valor salvo ainda é válido na lista atual de anos
+            saved_nivel = st.session_state.config.get('nivel')
+            if saved_nivel in anos:
+                nivel_idx = anos.index(saved_nivel)
             
             nivel = st.selectbox("Ano de Escolaridade", anos, index=nivel_idx)
             
+            # Se o nível mudou, limpa as turmas selecionadas no config para evitar erro no multiselect
+            if saved_nivel != nivel:
+                 st.session_state.config['turmas'] = []
+                 st.session_state.config['nivel'] = nivel
+
             # Lógica de Turmas
             qtd_turmas = {
                 "Maternal II": 2, "Etapa I": 3, "Etapa II": 3,
@@ -238,7 +245,11 @@ def render_step1():
             prefixo = f"{nivel} - Turma" if "Maternal" in nivel or "Etapa" in nivel else f"{nivel} "
             opcoes_turmas = [f"{prefixo}{i}" for i in range(1, max_t + 1)]
             
-            turmas = st.multiselect("Turmas (Espelhamento)", opcoes_turmas, default=st.session_state.config.get('turmas', []))
+            # Garante que o default do multiselect contém apenas opções válidas
+            default_turmas = st.session_state.config.get('turmas', [])
+            valid_default_turmas = [t for t in default_turmas if t in opcoes_turmas]
+
+            turmas = st.multiselect("Turmas (Espelhamento)", opcoes_turmas, default=valid_default_turmas)
 
         with c2:
             meses = {2: "Fevereiro", 3: "Março", 4: "Abril", 5: "Maio", 6: "Junho", 7: "Julho", 
@@ -444,20 +455,15 @@ def render_step3():
             
     with c_final:
         if st.button("🚀 Gerar Documento Oficial", type="primary", use_container_width=True):
-            # Correção do erro de sintaxe e validação
-            conteudos = st.session_state.conteudos_selecionados
-            
             if not situacao or not recursos or not recuperacao:
                 st.error("Preencha os campos obrigatórios!")
-            elif not conteudos:
-                 st.error("Nenhum conteúdo selecionado.")
             else:
                 # Prepara dados finais
                 final_data = st.session_state.config
                 final_data['Turmas'] = ", ".join(final_data['turmas'])
                 
                 # Gera DOC
-                doc_buffer = gerar_docx_premium(conteudos, final_data)
+                doc_buffer = gerar_docx_premium(st.session_state.conteudos_selecionados, final_data)
                 
                 st.balloons()
                 st.success("Documento gerado com sucesso!")
