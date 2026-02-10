@@ -10,7 +10,7 @@ import base64
 
 # --- CONFIGURAÇÃO DA PÁGINA (WIDE MODE & TITLE) ---
 st.set_page_config(
-    page_title="Sistema Planejar",
+    page_title="Sistema Planejar | CEIEF Rafael Affonso Leite",
     layout="wide",
     page_icon="🎓",
     initial_sidebar_state="collapsed"
@@ -58,6 +58,15 @@ st.markdown("""
         opacity: 0.9;
         font-size: 1rem;
     }
+    
+    .header-logo-img {
+        height: 80px;
+        width: auto;
+        border-radius: 8px; /* Opcional: borda arredondada no logo */
+        background-color: white; /* Fundo branco para o logo se for transparente */
+        padding: 5px;
+    }
+
 
     /* Cards Modernos */
     .card-container {
@@ -111,8 +120,9 @@ st.markdown("""
             text-align: center;
             gap: 1rem;
         }
-        .header-logo {
-            display: none; /* Esconde logo no mobile para economizar espaço */
+        /* No mobile, o logo pode ficar menor ou escondido se preferir */
+        .header-logo-img {
+            height: 60px;
         }
     }
     
@@ -153,16 +163,35 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# --- FUNÇÃO PARA CARREGAR IMAGEM ---
+def get_image_base64(path):
+    if os.path.exists(path):
+        with open(path, "rb") as image_file:
+            encoded = base64.b64encode(image_file.read()).decode()
+        return f"data:image/png;base64,{encoded}"
+    return None
+
 # --- HEADER PREMIUM ---
 def render_header():
-    st.markdown("""
+    # Tenta carregar o logo da escola
+    logo_path = "logo_escola.png" if os.path.exists("logo_escola.png") else "logo_escola.jpg"
+    logo_base64 = get_image_base64(logo_path)
+    
+    logo_html = ""
+    if logo_base64:
+        logo_html = f'<img src="{logo_base64}" class="header-logo-img" alt="Logo Escola">'
+    else:
+        # Fallback para um emoji se não tiver imagem
+        logo_html = '<div style="font-size: 2.5rem;">🏫</div>'
+
+    st.markdown(f"""
     <div class="premium-header">
         <div class="header-text">
             <h1>Sistema Planejar</h1>
-            <p>Sistema interno - CEIEF Rafael Affonso Leite</p>
+            <p>Sistema para uso interno e exclusivo do CEIEF Rafael Affonso Leite</p>
         </div>
-        <div class="header-logo" style="font-size: 2.5rem;">
-            🏫
+        <div class="header-logo">
+            {logo_html}
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -553,7 +582,6 @@ elif st.session_state.step == 3:
 # Rodapé Premium
 st.markdown("""
     <div style='margin-top: 50px; text-align: center; color: #94a3b8; font-size: 0.8rem; border-top: 1px solid #e2e8f0; padding-top: 20px;'>
-        <b>Sistema Planejar</b> • © 2025 José Victor Souza Gallo
+        Sistema para uso interno e exclusivo do CEIEF Rafael Affonso Leite
     </div>
 """, unsafe_allow_html=True)
-
