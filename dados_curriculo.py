@@ -1,3 +1,7 @@
+```python
+# ARQUIVO: dados_curriculo.py
+# Baseado INTEGRALMENTE nas tabelas oficiais do Currículo Fundamental e Infantil Linguagens e Tecnologias (2025)
+
 CURRICULO_DB = {
     # ==============================================================================
     # EDUCAÇÃO INFANTIL - MATERNAL II
@@ -247,7 +251,7 @@ CURRICULO_DB = {
             },
             {
                 "eixo": "PENSAMENTO COMPUTACIONAL",
-                "geral": "PRÁTicas CRIADORAS",
+                "geral": "PRÁTICAS CRIADORAS",
                 "especifico": "Exploração e construção de objetos com materiais não estruturados.",
                 "objetivo": "Construir objetos usando materiais não estruturados.",
                 "trimestre": "1º, 2º e 3º Trimestres"
@@ -340,7 +344,6 @@ CURRICULO_DB = {
             }
         ]
     },
-
     # ==============================================================================
     # EDUCAÇÃO INFANTIL - ETAPA II
     # ==============================================================================
@@ -429,7 +432,7 @@ CURRICULO_DB = {
             },
             {
                 "eixo": "PENSAMENTO COMPUTACIONAL",
-                "geral": "PRÁTicas CRIADORAS",
+                "geral": "PRÁTICAS CRIADORAS",
                 "especifico": "Exploração e construção de objetos com materiais não estruturados.",
                 "objetivo": "Construir objetos usando materiais não estruturados.",
                 "trimestre": "1º, 2º e 3º Trimestres"
@@ -565,7 +568,6 @@ CURRICULO_DB = {
             {"eixo": "CIÊNCIAS HUMANAS", "geral": "Fatos Históricos", "especifico": "Tradições culturais, hinos (Nacional/Municipal) e símbolos pátrios.", "objetivo": "Participar de práticas culturais e observar bandeiras e cores (MI-1).", "trimestre": "Contínuo"}
         ]
     },
-        
     # ==============================================================================
     # 1º ANO
     # ==============================================================================
@@ -747,7 +749,7 @@ CURRICULO_DB = {
             },
             {
                 "eixo": "PENSAMENTO COMPUTACIONAL",
-                "geral": "PRÁTicas CRIADORAS",
+                "geral": "PRÁTICAS CRIADORAS",
                 "especifico": "Exploração e construção de objetos com materiais não estruturados.",
                 "objetivo": "Construir objetos usando materiais não estruturados.",
                 "trimestre": "1º, 2º e 3º Trimestres"
@@ -769,7 +771,7 @@ CURRICULO_DB = {
                 "trimestre": "1º, 2º e 3º Trimestres"
             },
             {
-                "eixo": "ORALidade",
+                "eixo": "ORALIDADE",
                 "geral": "CONTEXTO ESCOLAR",
                 "especifico": "Reconhecimento e uso de vocabulário relacionado ao contexto escolar.",
                 "objetivo": "Reconhecer e compreender o uso da Língua Inglesa (EF01LI02).",
@@ -977,7 +979,6 @@ CURRICULO_DB = {
             }
         ]
     },
-
     # ==============================================================================
     # 2º ANO
     # ==============================================================================
@@ -1166,7 +1167,7 @@ CURRICULO_DB = {
             },
             {
                 "eixo": "PENSAMENTO COMPUTACIONAL",
-                "geral": "PRÁTicas CRIADORAS",
+                "geral": "PRÁTICAS CRIADORAS",
                 "especifico": "Exploração e construção de objetos com materiais não estruturados.",
                 "objetivo": "Construir objetos utilizando materiais não estruturados.",
                 "trimestre": "1º, 2º e 3º Trimestres"
@@ -1522,7 +1523,6 @@ CURRICULO_DB = {
             }
         ]
     },
-
     # ==============================================================================
     # 3º ANO
     # ==============================================================================
@@ -1753,7 +1753,7 @@ CURRICULO_DB = {
             },
             {
                 "eixo": "PENSAMENTO COMPUTACIONAL",
-                "geral": "PRÁTicas CRIADORAS",
+                "geral": "PRÁTICAS CRIADORAS",
                 "especifico": "Construção de objetos com materiais não estruturados.",
                 "objetivo": "Construir objetos utilizando materiais não estruturados.",
                 "trimestre": "1º, 2º e 3º Trimestres"
@@ -2095,9 +2095,8 @@ CURRICULO_DB = {
             }
         ]
     },
-
     # ==============================================================================
-    # 4º ANO (NOVO! - Adicionado conforme tabela oficial)
+    # 4º ANO
     # ==============================================================================
     "4º Ano": {
         "CULTURA DIGITAL: LETRAMENTO E CIDADANIA": [
@@ -2598,9 +2597,8 @@ CURRICULO_DB = {
             }
         ]
     },
-
     # ==============================================================================
-    # 5º ANO (NOVO! - Adicionado conforme tabela oficial)
+    # 5º ANO
     # ==============================================================================
     "5º Ano": {
         "CULTURA DIGITAL: LETRAMENTO E CIDADANIA": [
@@ -2829,7 +2827,7 @@ CURRICULO_DB = {
             },
             {
                 "eixo": "PENSAMENTO COMPUTACIONAL",
-                "geral": "PRÁTicas CRIADORAS",
+                "geral": "PRÁTICAS CRIADORAS",
                 "especifico": "Desenvolvimento de projetos autorais com materiais não estruturados, resolvendo desafios propostos.",
                 "objetivo": "Construir objetos usando materiais não estruturados.",
                 "trimestre": "1º e 3º Trimestres"
@@ -3340,5 +3338,3 @@ CURRICULO_DB = {
         ]
     }
 }
-```
-
