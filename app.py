@@ -40,13 +40,17 @@ st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
     
-    /* ESTAS LINHAS ABAIXO SOMEM COM A BARRA E O RODAPÉ */
+    /* 1. ESCONDER TUDO DO STREAMLIT (BARRA, MENU E RODAPÉ) */
     header {visibility: hidden;}
     footer {visibility: hidden;}
     #MainMenu {visibility: hidden;}
-    [data-testid="stStatusWidget"] {display: none;}
-    .stAppDeployButton {display:none;}
+    .stDeployButton {display:none;}
+    [data-testid="stToolbar"] {display: none !important;}
+    [data-testid="stDecoration"] {display: none !important;}
+    [data-testid="stStatusWidget"] {display: none !important;}
+    #stDecoration {display:none !important;}
     
+    /* 2. ESTILO GERAL */
     html, body, [class*="css"] {
         font-family: 'Outfit', sans-serif;
         color: #1e293b;
@@ -59,12 +63,10 @@ st.markdown("""
     [data-testid="stSidebar"], [data-testid="stSidebarNav"] {
         display: none !important;
     }
-    .st-emotion-cache-16ids0d {
-        display: none !important;
-    }
     
+    /* 3. AJUSTE DE ESPAÇO NO TOPO (AS DUAS LINHAS QUE VOCÊ PEDIU) */
     .block-container {
-        padding-top: 4rem !important;
+        padding-top: 5rem !important; 
         max-width: 1100px !important;
     }
 
@@ -148,7 +150,6 @@ st.markdown("""
         .premium-header-box { height: auto; padding: 1.5rem; }
         .header-text-main { font-size: 1.8rem !important; }
         .logo-quadrant { height: 80px; margin-top: 10px; }
-        .logo-pencil { font-size: 2rem !important; }
     }
 
     .status-tag {
@@ -182,7 +183,7 @@ with col_main:
     st.markdown(f"""
     <div class="premium-header-box">
         <h1 class="header-text-main">Sistema Planejar</h1>
-        <p class="header-text-sub">Gestão Pedagógica Digital • CEIEF Rafael Affonso Leite</p>
+        <p class="header-text-sub"> Uso Interno • CEIEF Rafael Affonso Leite</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -421,6 +422,7 @@ st.markdown(f"""
         Desenvolvido por José Victor Souza Gallo • CEIEF Rafael Affonso Leite © {datetime.now().year}
     </div>
 """, unsafe_allow_html=True)
+
 
 
 
