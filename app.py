@@ -212,7 +212,7 @@ if st.session_state.step == 1:
         
         # Lógica de Turmas
         if "Maternal" in ano:
-            opts = [f"{ano} - Turma 1", f"{ano} - Turma 2"]
+            opts = [f"{ano} - Turma 1"]
         else:
             qtd_turmas = {"Etapa I": 3, "Etapa II": 3, "1º Ano": 3, "2º Ano": 3, "3º Ano": 3, "4º Ano": 3, "5º Ano": 3}
             max_t = qtd_turmas.get(ano, 3)
@@ -414,4 +414,5 @@ st.markdown(f"""
         Desenvolvido por José Victor Souza Gallo • CEIEF Rafael Affonso Leite © {datetime.now().year}
     </div>
 """, unsafe_allow_html=True)
+
 
