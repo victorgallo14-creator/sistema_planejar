@@ -35,7 +35,7 @@ if 'config' not in st.session_state:
 def set_step(s): 
     st.session_state.step = s
 
-# --- 3. ESTILIZAÇÃO CSS (PREMIUM UI - LOGOS EXTERNOS) ---
+# --- 3. ESTILIZAÇÃO CSS (PREMIUM UI - LOGO EXTERNO & RESPONSIVO) ---
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
@@ -53,30 +53,27 @@ st.markdown("""
     [data-testid="stSidebar"], [data-testid="stSidebarNav"] {
         display: none !important;
     }
-    .st-emotion-cache-16ids0d {
-        display: none !important;
-    }
     
-    /* Centralizar conteúdo */
+    /* Centralizar conteúdo principal */
     .block-container {
         padding-top: 2rem !important;
         max-width: 1100px !important;
     }
 
-    /* QUADRANTES DOS LOGOS (LADO DE FORA) */
+    /* QUADRANTE DO LOGO (BRANCO EXTERNO) */
     .logo-quadrant {
         display: flex;
         align-items: center;
         justify-content: center;
         background: white;
-        padding: 15px;
+        padding: 10px;
         border-radius: 20px;
         border: 1px solid #e2e8f0;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        height: 100%;
+        height: 120px; /* Altura fixa para manter alinhamento */
     }
 
-    /* CAIXA AZUL DE TÍTULO (SEM LOGOS INTERNOS) */
+    /* CAIXA AZUL DE TÍTULO */
     .premium-header-box {
         background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
         padding: 2.2rem;
@@ -84,6 +81,7 @@ st.markdown("""
         box-shadow: 0 10px 25px -5px rgba(30, 58, 138, 0.3);
         text-align: center;
         border: 1px solid rgba(255,255,255,0.1);
+        height: 120px;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -92,19 +90,31 @@ st.markdown("""
     .header-text-main {
         margin: 0;
         font-weight: 800;
-        font-size: 2.6rem !important;
+        font-size: 2.4rem !important;
         color: white !important;
         letter-spacing: -1.5px;
         line-height: 1;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     .header-text-sub {
-        margin: 10px 0 0 0;
+        margin: 8px 0 0 0;
         font-weight: 400;
         color: rgba(255,255,255,0.9);
-        font-size: 1rem;
+        font-size: 0.95rem;
         text-transform: uppercase;
         letter-spacing: 1px;
+    }
+
+    /* AJUSTE PARA MOBILE */
+    @media (max-width: 768px) {
+        .header-text-main { font-size: 1.8rem !important; }
+        .logo-quadrant { 
+            height: auto; 
+            padding: 15px; 
+            margin-top: 10px; 
+        }
+        .logo-img-mobile {
+            max-width: 100px !important;
+        }
     }
 
     /* CARDS E INPUTS */
@@ -124,11 +134,6 @@ st.markdown("""
         color: #0f172a !important;
         font-weight: 500 !important;
     }
-    
-    .stTextInput input:focus, .stTextArea textarea:focus {
-        border-color: #3b82f6 !important;
-        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1) !important;
-    }
 
     /* BOTÕES */
     .stButton > button {
@@ -139,18 +144,11 @@ st.markdown("""
         text-transform: uppercase;
         letter-spacing: 0.5px;
         border: none;
-        transition: all 0.2s ease;
     }
     
     div[data-testid="stVerticalBlock"] > div > div > div > div > button[kind="primary"] {
         background: #1e3a8a !important;
         color: white !important;
-        box-shadow: 0 10px 15px -3px rgba(30, 58, 138, 0.2);
-    }
-    
-    div[data-testid="stVerticalBlock"] > div > div > div > div > button[kind="primary"]:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 15px 25px -5px rgba(30, 58, 138, 0.3);
     }
 
     /* TAGS */
@@ -182,18 +180,9 @@ def get_brazil_time():
     fuso_horario = timezone(timedelta(hours=-3))
     return datetime.now(fuso_horario)
 
-# --- 4. RENDERIZAÇÃO DO CABEÇALHO COM LOGOS EXTERNOS ---
-# Criamos uma estrutura de colunas onde os logos ficam nos "quadrantes" laterais fora da caixa azul
-col_logo_pref, col_main_title, col_logo_esc = st.columns([1.5, 6, 1.5], vertical_alignment="center")
-
-with col_logo_pref:
-    st.markdown('<div class="logo-quadrant">', unsafe_allow_html=True)
-    logo_p = "logo_prefeitura.png" if os.path.exists("logo_prefeitura.png") else "logo_prefeitura.jpg"
-    if os.path.exists(logo_p):
-        st.image(logo_p, use_container_width=True)
-    else:
-        st.markdown('<div style="font-size:2.5rem; opacity:0.2;">🏛️</div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+# --- 4. RENDERIZAÇÃO DO CABEÇALHO ---
+# Layout de 2 colunas: Título (Esquerda/Centro) e Logo Escola (Direita)
+col_main_title, col_logo_esc = st.columns([8, 2], vertical_alignment="center")
 
 with col_main_title:
     st.markdown(f"""
@@ -207,6 +196,7 @@ with col_logo_esc:
     st.markdown('<div class="logo-quadrant">', unsafe_allow_html=True)
     logo_e = "logo_escola.png" if os.path.exists("logo_escola.png") else "logo_escola.jpg"
     if os.path.exists(logo_e):
+        # Aplicamos uma classe CSS para controle refinado do tamanho no mobile
         st.image(logo_e, use_container_width=True)
     else:
         st.markdown('<div style="font-size:2.5rem; text-align:center;">🏫</div>', unsafe_allow_html=True)
@@ -318,7 +308,7 @@ elif st.session_state.step == 2:
                 if st.button("✕", key=f"del_{i}"): st.session_state.conteudos_selecionados.pop(i); st.rerun()
 
     c1, c2 = st.columns(2)
-    if c1.button("⬅ Voltar"): set_step(1); st.rerun()
+    if c1.button("⬅ Voltar para Identificação"): set_step(1); st.rerun()
     if c2.button("Avançar para Detalhamento ➔", type="primary", use_container_width=True):
         if not st.session_state.conteudos_selecionados: st.error("Erro: Selecione ao menos um conteúdo.")
         else: set_step(3); st.rerun()
@@ -351,7 +341,6 @@ elif st.session_state.step == 3:
         pdf.set_font('Arial', 'B', 14); pdf.cell(0, 10, 'CEIEF RAFAEL AFFONSO LEITE', 0, 1, 'C')
         pdf.set_font('Arial', '', 10); pdf.cell(0, 5, 'Planeamento de Linguagens e Tecnologias', 0, 1, 'C'); pdf.ln(10)
         
-        # Bloco de Identificação Detalhado
         pdf.set_fill_color(245, 247, 250); pdf.set_font("Arial", 'B', 9)
         pdf.cell(0, 7, clean(f"DOCENTE: {dados['professor']}"), 1, 1, 'L', True)
         pdf.cell(0, 7, clean(f"ANO: {dados['ano']} | TURMAS: {', '.join(dados['turmas'])}"), 1, 1, 'L', True)
@@ -369,7 +358,7 @@ elif st.session_state.step == 3:
         
         horario_br = get_brazil_time().strftime("%d/%m/%Y %H:%M:%S")
         pdf.set_y(-20); pdf.set_font('Arial', 'I', 8)
-        pdf.cell(0, 10, f'Emitido pelo Sistema Planejar (Brasil/GMT-3) em: {horario_br}', 0, 0, 'C')
+        pdf.cell(0, 10, f'Emitido pelo Sistema Planejar (GMT-3) em: {horario_br}', 0, 0, 'C')
         return pdf.output(dest='S').encode('latin-1')
 
     def gerar_docx(dados, conteudos):
@@ -387,7 +376,7 @@ elif st.session_state.step == 3:
             p = doc.add_paragraph(); p.add_run(l + ": ").bold = True; p.add_run(v)
         
         horario_br = get_brazil_time().strftime("%d/%m/%Y %H:%M:%S")
-        doc.add_paragraph(f"\nEmitido eletronicamente em: {horario_br} (Brasília/GMT-3)")
+        doc.add_paragraph(f"\nEmitido eletronicamente em: {horario_br} (GMT-3)")
         f = BytesIO(); doc.save(f); f.seek(0); return f
 
     c1, c2 = st.columns(2)
