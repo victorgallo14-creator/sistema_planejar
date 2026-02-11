@@ -296,15 +296,15 @@ elif st.session_state.step == 3:
         st.markdown('<div class="card-container">', unsafe_allow_html=True)
         st.markdown("<div style='color:#be123c; font-weight:800; font-size:0.8rem; margin-bottom:1.5rem;'>TODOS OS CAMPOS SÃO OBRIGATÓRIOS PARA A EMISSÃO OFICIAL</div>", unsafe_allow_html=True)
         
-        obj_esp = st.text_area("OBJETIVOS ESPECÍFICOS DA AULA", height=120, placeholder="Defina os resultados práticos desejados...", value=st.session_state.config.get('obj_esp', ''))
+        obj_esp = st.text_area("Objetivos Específicos", height=120, placeholder="Defina os resultados práticos pretendidos...", value=st.session_state.config.get('obj_esp', ''))
         
         c1, c2 = st.columns(2)
-        with c1: sit = st.text_area("SITUAÇÃO DIDÁTICA / METODOLOGIA", height=220, placeholder="Passo a passo...", value=st.session_state.config.get('sit', ''))
-        with c2: rec = st.text_area("RECURSOS DIDÁTICOS", height=220, placeholder="Materiais...", value=st.session_state.config.get('rec', ''))
+        with c1: sit = st.text_area("Situação didática", height=220, placeholder="Passo a passo da atividade...", value=st.session_state.config.get('sit', ''))
+        with c2: rec = st.text_area("Recursos e Materiais", height=220, placeholder="Materiais necessários para a aula...", value=st.session_state.config.get('rec', ''))
         
         c3, c4 = st.columns(2)
-        with c3: aval = st.text_area("PROCEDIMENTOS DE AVALIAÇÃO", height=120, value=st.session_state.config.get('aval', ''))
-        with c4: recup = st.text_area("RECUPERAÇÃO CONTÍNUA", height=120, value=st.session_state.config.get('recup', ''))
+        with c3: aval = st.text_area("Avaliação", height=120, value=st.session_state.config.get('aval', ''))
+        with c4: recup = st.text_area("Recuperação Contínua", height=120, value=st.session_state.config.get('recup', ''))
         st.markdown('</div>', unsafe_allow_html=True)
 
     st.session_state.config.update({'obj_esp': obj_esp, 'sit': sit, 'rec': rec, 'aval': aval, 'recup': recup})
@@ -342,12 +342,10 @@ elif st.session_state.step == 3:
             x_start = pdf.get_x()
             y_start = pdf.get_y()
             
-            # Texto preparado
             txt_eixo = clean(f"{it['eixo']}\n({it['geral']})")
             txt_hab = clean(it['especifico'])
             txt_obj = clean(it['objetivo'])
             
-            # Cálculo de linhas para alinhar altura
             pdf.multi_cell(col_w[0], 5, txt_eixo, 0, 'L')
             y_eixo = pdf.get_y()
             
@@ -362,13 +360,11 @@ elif st.session_state.step == 3:
             max_y = max(y_eixo, y_hab, y_obj)
             h_row = max_y - y_start
             
-            # Desenha as bordas da linha inteira
             pdf.set_xy(x_start, y_start)
             pdf.cell(col_w[0], h_row, "", 1, 0)
             pdf.cell(col_w[1], h_row, "", 1, 0)
             pdf.cell(col_w[2], h_row, "", 1, 1)
             
-            # Reposiciona o texto dentro da célula
             pdf.set_xy(x_start, y_start)
             pdf.multi_cell(col_w[0], 5, txt_eixo, 0, 'L')
             pdf.set_xy(x_start + col_w[0], y_start)
@@ -380,7 +376,7 @@ elif st.session_state.step == 3:
 
         # Detalhamento
         pdf.ln(5); pdf.set_font("Arial", 'B', 10); pdf.cell(0, 8, clean("DETALHAMENTO PEDAGOGICO"), 0, 1)
-        for l, v in [("Objetivos", dados['obj_esp']), ("Metodologia", dados['sit']), ("Recursos", dados['rec']), ("Avaliacao", dados['aval']), ("Recuperacao", dados['recup'])]:
+        for l, v in [("Objetivos Especificos", dados['obj_esp']), ("Situação didática", dados['sit']), ("Recursos e Materiais", dados['rec']), ("Avaliação", dados['aval']), ("Recuperação Contínua", dados['recup'])]:
             pdf.set_font("Arial", 'B', 9); pdf.cell(0, 5, clean(l + ":"), 0, 1)
             pdf.set_font("Arial", '', 9); pdf.multi_cell(0, 5, clean(v)); pdf.ln(2)
         
@@ -427,7 +423,7 @@ elif st.session_state.step == 3:
             row[2].text = it['objetivo']
 
         doc.add_heading("Detalhamento Pedagogico", 2)
-        for l, v in [("Obj. Especificos", dados['obj_esp']), ("Situacao", dados['sit']), ("Recursos", dados['rec']), ("Avaliacao", dados['aval']), ("Recuperacao", dados['recup'])]:
+        for l, v in [("Objetivos Especificos", dados['obj_esp']), ("Situação didática", dados['sit']), ("Recursos e Materiais", dados['rec']), ("Avaliação", dados['aval']), ("Recuperação Contínua", dados['recup'])]:
             p = doc.add_paragraph(); p.add_run(l + ": ").bold = True; p.add_run(v)
         
         doc.add_paragraph(f"\nEmitido eletronicamente em: {get_brazil_time().strftime('%d/%m/%Y %H:%M:%S')} (GMT-3)")
@@ -441,11 +437,11 @@ elif st.session_state.step == 3:
             f_data = st.session_state.config
             w_file = gerar_docx(f_data, st.session_state.conteudos_selecionados)
             p_file = gerar_pdf(f_data, st.session_state.conteudos_selecionados)
-            nome_arq = f"Planeamento_{f_data['mes']}_{f_data['ano'].replace(' ','')}"
+            nome_arq = f"Planejamento_{f_data['mes']}_{f_data['ano'].replace(' ','')}"
             st.success("✅ Documentação gerada com sucesso!")
             cd1, cd2 = st.columns(2)
-            cd1.download_button("📄 Descarregar WORD", w_file, f"{nome_arq}.docx", use_container_width=True)
-            cd2.download_button("📕 Descarregar PDF", p_file, f"{nome_arq}.pdf", use_container_width=True)
+            cd1.download_button("📄 Download em WORD", w_file, f"{nome_arq}.docx", use_container_width=True)
+            cd2.download_button("📕 Download em PDF", p_file, f"{nome_arq}.pdf", use_container_width=True)
 
 # --- RODAPÉ ---
 st.markdown(f"""
