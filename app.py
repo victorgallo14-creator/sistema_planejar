@@ -135,6 +135,7 @@ st.markdown("""
         text-transform: uppercase;
         letter-spacing: 0.5px;
         border: none;
+        transition: all 0.2s ease;
     }
     
     div[data-testid="stVerticalBlock"] > div > div > div > div > button[kind="primary"] {
@@ -347,7 +348,6 @@ elif st.session_state.step == 3:
             txt_obj = clean(it['objetivo'])
             
             # Cálculo de linhas para alinhar altura
-            # (Simplificado usando a maior altura gerada pelo multi_cell)
             pdf.multi_cell(col_w[0], 5, txt_eixo, 0, 'L')
             y_eixo = pdf.get_y()
             
@@ -362,13 +362,13 @@ elif st.session_state.step == 3:
             max_y = max(y_eixo, y_hab, y_obj)
             h_row = max_y - y_start
             
-            # Desenha as bordas da linha inteira para alinhar as colunas
+            # Desenha as bordas da linha inteira
             pdf.set_xy(x_start, y_start)
             pdf.cell(col_w[0], h_row, "", 1, 0)
             pdf.cell(col_w[1], h_row, "", 1, 0)
             pdf.cell(col_w[2], h_row, "", 1, 1)
             
-            # Reposiciona o texto dentro da célula com a altura correta (para evitar sobreposição)
+            # Reposiciona o texto dentro da célula
             pdf.set_xy(x_start, y_start)
             pdf.multi_cell(col_w[0], 5, txt_eixo, 0, 'L')
             pdf.set_xy(x_start + col_w[0], y_start)
@@ -442,7 +442,7 @@ elif st.session_state.step == 3:
             w_file = gerar_docx(f_data, st.session_state.conteudos_selecionados)
             p_file = gerar_pdf(f_data, st.session_state.conteudos_selecionados)
             nome_arq = f"Planeamento_{f_data['mes']}_{f_data['ano'].replace(' ','')}"
-            st.success("✅ Documentação gerada com sucesso!"); st.balloons()
+            st.success("✅ Documentação gerada com sucesso!")
             cd1, cd2 = st.columns(2)
             cd1.download_button("📄 Descarregar WORD", w_file, f"{nome_arq}.docx", use_container_width=True)
             cd2.download_button("📕 Descarregar PDF", p_file, f"{nome_arq}.pdf", use_container_width=True)
