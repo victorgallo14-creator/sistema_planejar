@@ -147,6 +147,7 @@ st.markdown("""
         text-transform: uppercase;
         letter-spacing: 0.5px;
         border: none;
+        transition: all 0.2s ease;
     }
     
     div[data-testid="stVerticalBlock"] > div > div > div > div > button[kind="primary"] {
@@ -180,23 +181,22 @@ st.markdown("""
 
 # --- FUNÇÕES DE APOIO ---
 def get_brazil_time():
+    # Define UTC-3 explicitamente para o Brasil
     fuso_horario = timezone(timedelta(hours=-3))
     return datetime.now(fuso_horario)
 
 # --- 4. RENDERIZAÇÃO DO CABEÇALHO ---
-# Layout de 2 colunas: Título (Esquerda/Centro) e Logo Escola (Direita)
 col_main_title, col_logo_esc = st.columns([8, 2], vertical_alignment="center")
 
 with col_main_title:
     st.markdown(f"""
     <div class="premium-header-box">
         <h1 class="header-text-main">Sistema Planejar</h1>
-        <p class="header-text-sub">Uso Interno • CEIEF Rafael Affonso Leite</p>
+        <p class="header-text-sub">Gestão Pedagógica Digital • CEIEF Rafael Affonso Leite</p>
     </div>
     """, unsafe_allow_html=True)
 
 with col_logo_esc:
-    # Quadrante branco externo com o emoji de lápis
     st.markdown("""
     <div class="logo-quadrant">
         <div class="pencil-logo-mobile" style="font-size: 3.5rem; text-align: center;">✏️</div>
@@ -267,7 +267,7 @@ if st.session_state.step == 1:
 
 # --- PASSO 2: MATRIZ ---
 elif st.session_state.step == 2:
-    st.markdown(f"### 📖 Matriz Curricular: **{st.session_state.config['ano']}**")
+    st.markdown(f"### 📖 Matriz Curricular Oficial: **{st.session_state.config['ano']}**")
     
     with st.container():
         st.markdown('<div class="card-container">', unsafe_allow_html=True)
@@ -338,7 +338,7 @@ elif st.session_state.step == 3:
     def clean(t): return t.encode('latin-1', 'replace').decode('latin-1') if t else ""
 
     def gerar_pdf(dados, conteudos):
-        pdf = FPDF(); pdf.add_page(); pdf.set_auto_page_break(auto=True, margin=15)
+        pdf = FPDF(); pdf.add_page(); pdf.set_auto_page_break(auto=True, margin=30)
         pdf.set_font('Arial', 'B', 14); pdf.cell(0, 10, 'CEIEF RAFAEL AFFONSO LEITE', 0, 1, 'C')
         pdf.set_font('Arial', '', 10); pdf.cell(0, 5, 'Planejamento de Linguagens e Tecnologias', 0, 1, 'C'); pdf.ln(10)
         
@@ -354,12 +354,18 @@ elif st.session_state.step == 3:
         for it in conteudos: pdf.multi_cell(0, 5, clean(f"[{it['tipo']}] {it['geral']}: {it['especifico']}"), 1, 'L')
         
         pdf.ln(5); pdf.set_font("Arial", 'B', 10); pdf.cell(0, 8, clean("DETALHAMENTO PEDAGÓGICO"), 0, 1)
-        for l, v in [("Objetivos Específicos", dados['obj_esp']), ("Metodologia", dados['sit']), ("Recursos", dados['rec']), ("Avaliação", dados['aval']), ("Recuperação", dados['recup'])]:
+        for l, v in [("Objetivos", dados['obj_esp']), ("Metodologia", dados['sit']), ("Recursos", dados['rec']), ("Avaliação", dados['aval']), ("Recuperação", dados['recup'])]:
             pdf.set_font("Arial", 'B', 9); pdf.cell(0, 5, clean(l + ":"), 0, 1); pdf.set_font("Arial", '', 9); pdf.multi_cell(0, 5, clean(v)); pdf.ln(2)
         
+        # FIX: CARIMBO NO RODAPÉ SEM GERAR NOVA PÁGINA
+        # Desativamos temporariamente a quebra automática para posicionar o rodapé
+        pdf.set_auto_page_break(False)
         horario_br = get_brazil_time().strftime("%d/%m/%Y %H:%M:%S")
-        pdf.set_y(-20); pdf.set_font('Arial', 'I', 8)
-        pdf.cell(0, 10, f'Emitido pelo Sistema Planejar  em: {horario_br}', 0, 0, 'C')
+        pdf.set_y(-15) # 1.5cm do fundo
+        pdf.set_font('Arial', 'I', 7)
+        pdf.cell(0, 10, clean(f'Emitido pelo Sistema Planejar (Brasil/GMT-3) em: {horario_br}'), 0, 0, 'C')
+        pdf.set_auto_page_break(True, margin=30)
+        
         return pdf.output(dest='S').encode('latin-1')
 
     def gerar_docx(dados, conteudos):
@@ -377,12 +383,12 @@ elif st.session_state.step == 3:
             p = doc.add_paragraph(); p.add_run(l + ": ").bold = True; p.add_run(v)
         
         horario_br = get_brazil_time().strftime("%d/%m/%Y %H:%M:%S")
-        doc.add_paragraph(f"\nEmitido eletronicamente em: {horario_br}")
+        doc.add_paragraph(f"\nEmitido eletronicamente em: {horario_br} (Brasília/GMT-3)")
         f = BytesIO(); doc.save(f); f.seek(0); return f
 
     c1, c2 = st.columns(2)
     if c1.button("⬅ Matriz"): set_step(2); st.rerun()
-    if c2.button("GERAR PLANEAMENTO FINAL 🚀", type="primary", use_container_width=True):
+    if c2.button("GERAR PLANEJAMENTO FINAL 🚀", type="primary", use_container_width=True):
         if not all([obj_esp, sit, rec, aval, recup]): 
             st.error("Erro: Preencha todos os campos obrigatórios.")
         else:
@@ -390,10 +396,10 @@ elif st.session_state.step == 3:
             w_file = gerar_docx(f_data, st.session_state.conteudos_selecionados)
             p_file = gerar_pdf(f_data, st.session_state.conteudos_selecionados)
             nome_arq = f"Planeamento_{f_data['mes']}_{f_data['ano'].replace(' ','')}"
-            st.success("✅ Documentação gerada com sucesso! Envie o arquivo em PDF ao professor coordenador para validação."); st.balloons()
+            st.success("✅ Documentação gerada com sucesso! Envie o arquivo em PDF ao coordenador."); st.balloons()
             cd1, cd2 = st.columns(2)
-            cd1.download_button("📄 Download em WORD", w_file, f"{nome_arq}.docx", use_container_width=True)
-            cd2.download_button("📕 Download em PDF", p_file, f"{nome_arq}.pdf", use_container_width=True)
+            cd1.download_button("📄 Download WORD", w_file, f"{nome_arq}.docx", use_container_width=True)
+            cd2.download_button("📕 Download PDF", p_file, f"{nome_arq}.pdf", use_container_width=True)
 
 # --- RODAPÉ ---
 st.markdown(f"""
@@ -402,6 +408,3 @@ st.markdown(f"""
         Desenvolvido por José Victor Souza Gallo • CEIEF Rafael Affonso Leite © {datetime.now().year}
     </div>
 """, unsafe_allow_html=True)
-
-
-
