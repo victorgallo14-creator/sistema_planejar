@@ -1,6 +1,6 @@
 import streamlit as st
 from docx import Document
-from docx.shared import Pt, Cm
+from docx.shared import Pt, Cm, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from fpdf import FPDF
 from io import BytesIO
@@ -20,7 +20,7 @@ except ModuleNotFoundError:
 st.set_page_config(
     page_title="Sistema Planejar | CEIEF",
     layout="wide",
-    page_icon="🔷",
+    page_icon="🎓",
     initial_sidebar_state="expanded"
 )
 
@@ -37,7 +37,7 @@ st.markdown("""
     
     /* FUNDO DA APLICAÇÃO (Cinza Azulado Moderno) */
     .stApp {
-        background-color: #f1f5f9;
+        background-color: #f8fafc;
     }
     
     /* BARRA LATERAL (Dark Mode - Estilo Dashboard) */
@@ -134,7 +134,7 @@ st.markdown("""
         transition: all 0.2s;
     }
     .stButton > button:hover {
-        background-color: #f8fafc;
+        background-color: #f1f5f9;
         border-color: #cbd5e1;
         transform: translateY(-1px);
     }
@@ -357,7 +357,7 @@ elif st.session_state.step == 2:
         st.markdown("##### Itens Selecionados")
         for i, item in enumerate(st.session_state.conteudos_selecionados):
             tag_cls = "tag-tech" if item['tipo'] == "Tecnologia" else "tag-eng"
-            c_txt, c_btn = st.columns([0.9, 0.1])
+            c_txt, c_del = st.columns([0.9, 0.1])
             c_txt.markdown(f"""
             <div style="background:white; border:1px solid #e2e8f0; padding:10px; border-radius:6px; margin-bottom:5px;">
                 <span class="status-tag {tag_cls}">{item['tipo']}</span> 
@@ -424,15 +424,16 @@ elif st.session_state.step == 3:
         pdf.set_font('Arial', 'B', 12)
         pdf.cell(0, 5, 'PREFEITURA MUNICIPAL DE LIMEIRA', 0, 1, 'C')
         pdf.cell(0, 5, 'CEIEF RAFAEL AFFONSO LEITE', 0, 1, 'C')
-        pdf.set_font('Arial', '', 10); pdf.cell(0, 5, 'Planejamento de Linguagens e Tecnologias', 0, 1, 'C'); pdf.ln(15)
+        pdf.set_font('Arial', '', 10)
+        pdf.cell(0, 5, 'Planejamento de Linguagens e Tecnologias', 0, 1, 'C')
+        pdf.ln(15)
 
-        # Cabeçalho Cinza
-        pdf.set_fill_color(241, 245, 249); pdf.set_draw_color(226, 232, 240)
-        pdf.rect(10, pdf.get_y(), 190, 20, 'F')
-        pdf.set_xy(12, pdf.get_y()+2)
-        pdf.set_font("Arial", 'B', 9); pdf.cell(20, 5, clean("Período:"), 0, 0); pdf.set_font("Arial", '', 9); pdf.cell(0, 5, clean(f"{dados['periodo']} ({dados['trimestre']})"), 0, 1)
-        pdf.set_x(12); pdf.set_font("Arial", 'B', 9); pdf.cell(20, 5, clean("Professor:"), 0, 0); pdf.set_font("Arial", '', 9); pdf.cell(0, 5, clean(dados['professor']), 0, 1)
-        pdf.set_x(12); pdf.set_font("Arial", 'B', 9); pdf.cell(20, 5, clean("Turmas:"), 0, 0); pdf.set_font("Arial", '', 9); pdf.cell(0, 5, clean(f"{dados['ano']} - {', '.join(dados['turmas'])}"), 0, 1)
+        # Dados
+        pdf.set_fill_color(240, 245, 255)
+        pdf.set_font("Arial", 'B', 9)
+        pdf.cell(0, 6, clean(f"PERÍODO: {dados['periodo']} ({dados['trimestre']})"), 0, 1, 'L', True)
+        pdf.cell(0, 6, clean(f"PROFESSOR(A): {dados['professor']}"), 0, 1, 'L', True)
+        pdf.cell(0, 6, clean(f"ANO: {dados['ano']} | TURMAS: {', '.join(dados['turmas'])}"), 0, 1, 'L', True)
         pdf.ln(5)
 
         # Matriz
@@ -440,18 +441,19 @@ elif st.session_state.step == 3:
         pdf.set_font("Arial", '', 9)
         for item in conteudos:
             pdf.set_fill_color(248, 250, 252)
-            pdf.multi_cell(0, 5, clean(f"[{item['tipo']}] {item['geral']}"), 1, 'L', True)
-            pdf.multi_cell(0, 5, clean(f"Hab: {item['especifico']}"), 1, 'L')
-            pdf.multi_cell(0, 5, clean(f"Obj: {item['objetivo']}"), 1, 'L')
-            pdf.ln(1)
-
-        # Detalhamento
-        pdf.ln(2)
+            pdf.multi_cell(0, 5, clean(f"EIXO: {item['eixo']} | {item['geral']}"), 0, 1)
+            pdf.set_font("Arial", '', 8)
+            pdf.multi_cell(0, 5, clean(f"Habilidade: {item['especifico']}"), 0, 'L')
+            pdf.multi_cell(0, 5, clean(f"Objetivo: {item['objetivo']}"), 0, 'L')
+            pdf.ln(2)
+        
+        pdf.ln(3)
         pdf.set_font("Arial", 'B', 10); pdf.cell(0, 8, clean("DETALHAMENTO PEDAGÓGICO"), 0, 1)
         
-        pdf.set_font("Arial", 'B', 9); pdf.cell(0, 5, clean("Objetivos Específicos:"), 0, 1); 
-        pdf.set_font("Arial", '', 9); pdf.multi_cell(0, 5, clean(dados['obj_esp'])); pdf.ln(3)
-        
+        if dados['obj_esp']:
+            pdf.set_font("Arial", 'B', 9); pdf.cell(0, 5, clean("Objetivos Específicos:"), 0, 1)
+            pdf.set_font("Arial", '', 9); pdf.multi_cell(0, 5, clean(dados['obj_esp'])); pdf.ln(3)
+
         pdf.set_font("Arial", 'B', 9); pdf.cell(0, 5, clean("Situação Didática:"), 0, 1)
         pdf.set_font("Arial", '', 9); pdf.multi_cell(0, 5, clean(dados['sit'])); pdf.ln(3)
         
@@ -504,7 +506,7 @@ elif st.session_state.step == 3:
         if conteudos:
             doc.add_heading("Matriz Curricular", 3)
             tb = doc.add_table(rows=1, cols=3); tb.style = 'Table Grid'
-            tb.rows[0].cells[0].text = "Eixo"; tb.rows[0].cells[1].text = "Conteúdo"; tb.rows[0].cells[2].text = "Objetivo"
+            tb.rows[0].cells[0].text = "Eixo"; tb.rows[0].cells[1].text = "Conteúdo Específico"; tb.rows[0].cells[2].text = "Objetivo Curricular"
             for item in conteudos:
                 r = tb.add_row().cells
                 r[0].text = f"{item['eixo']}\n({item['geral']})"
@@ -514,7 +516,8 @@ elif st.session_state.step == 3:
         doc.add_paragraph(); doc.add_heading("Detalhamento Pedagógico", 3)
         
         p = doc.add_paragraph(); p.add_run("Objetivos Específicos:\n").bold = True; p.add_run(dados['obj_esp'])
-        p = doc.add_paragraph(); p.add_run("\nSituação Didática:\n").bold = True; p.add_run(dados['sit'])
+        
+        p = doc.add_paragraph(); p.add_run("Situação Didática:\n").bold = True; p.add_run(dados['sit'])
         p = doc.add_paragraph(); p.add_run("\nRecursos:\n").bold = True; p.add_run(dados['rec'])
         p = doc.add_paragraph(); p.add_run("\nAvaliação:\n").bold = True; p.add_run(dados['aval'])
         p = doc.add_paragraph(); p.add_run("\nRecuperação:\n").bold = True; p.add_run(dados['recup'])
@@ -525,8 +528,9 @@ elif st.session_state.step == 3:
     c_b1, c_b2 = st.columns(2)
     if c_b1.button("⬅️ Voltar"): set_step(2); st.rerun()
     if c_b2.button("Emitir Documentos Oficiais (PDF + Word)", type="primary", use_container_width=True):
+        # Validação Atualizada - Verifica se todos os campos estão preenchidos
         if not obj_esp or not sit or not rec or not aval or not recup:
-            st.error("Todos os campos de detalhamento são obrigatórios.")
+            st.error("Preencha todos os campos obrigatórios (marcados com a barra vermelha).")
         else:
             f_data = st.session_state.config
             word_file = gerar_docx(f_data, st.session_state.conteudos_selecionados)
