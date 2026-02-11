@@ -191,7 +191,7 @@ with col_main_title:
     st.markdown(f"""
     <div class="premium-header-box">
         <h1 class="header-text-main">Sistema Planejar</h1>
-        <p class="header-text-sub">Gestão Pedagógica Digital • CEIEF Rafael Affonso Leite</p>
+        <p class="header-text-sub">Uso Interno • CEIEF Rafael Affonso Leite</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -212,7 +212,7 @@ st.write("")
 # --- PASSO 1: CONFIGURAÇÃO ---
 if st.session_state.step == 1:
     st.markdown('<div class="card-container">', unsafe_allow_html=True)
-    st.markdown("### 📋 Identificação do Planeamento")
+    st.markdown("### 📋 Identificação do Planejamento")
     
     c1, c2 = st.columns(2)
     with c1:
@@ -275,14 +275,14 @@ elif st.session_state.step == 2:
         op_tec = [k for k, v in dados.items() if "INGLÊS" not in k.upper() and "ORALIDADE" not in v[0]['eixo'].upper()]
         op_ing = [k for k in dados.keys() if k not in op_tec]
 
-        t1, t2 = st.tabs(["💻 Tecnologia & Cultura Digital", "🇬🇧 Língua Inglesa"])
+        t1, t2 = st.tabs(["💻 Tecnologia & Cultura Digital", "🗣️ Língua Inglesa"])
         with t1:
             if op_tec:
                 c1, c2 = st.columns(2)
                 g = c1.selectbox("EIXO CURRICULAR", op_tec, key="t_g")
-                e = c2.selectbox("HABILIDADE ESPECÍFICA", [i['especifico'] for i in dados[g]], key="t_e")
+                e = c2.selectbox("CONTEÚDO ESPECÍFICO", [i['especifico'] for i in dados[g]], key="t_e")
                 sel = next(i for i in dados[g] if i['especifico'] == e)
-                st.markdown(f"<div style='background:#f1f5f9; padding:1.5rem; border-radius:12px; border:1px solid #cbd5e1; margin-top:10px;'><span class='status-tag tag-tech'>Objetivo do Currículo</span><br><b>{sel['objetivo']}</b></div>", unsafe_allow_html=True)
+                st.markdown(f"<div style='background:#f1f5f9; padding:1.5rem; border-radius:12px; border:1px solid #cbd5e1; margin-top:10px;'><span class='status-tag tag-tech'>Objetivo para o ano</span><br><b>{sel['objetivo']}</b></div>", unsafe_allow_html=True)
                 if st.button("Adicionar à Lista ➕", key="bt_t"):
                     st.session_state.conteudos_selecionados.append({'tipo': 'Tecnologia', 'eixo': sel['eixo'], 'geral': g, 'especifico': e, 'objetivo': sel['objetivo']})
                     st.toast("Item adicionado!")
@@ -294,7 +294,7 @@ elif st.session_state.step == 2:
                 g = c1.selectbox("TÓPICO DE LINGUAGEM", op_ing, key="i_g")
                 e = c2.selectbox("PRÁTICA LINGUÍSTICA", [i['especifico'] for i in dados[g]], key="i_e")
                 sel = next(i for i in dados[g] if i['especifico'] == e)
-                st.markdown(f"<div style='background:#fef2f2; padding:1.5rem; border-radius:12px; border:1px solid #fecdd3; margin-top:10px;'><span class='status-tag tag-eng'>Objetivo do Currículo</span><br><b>{sel['objetivo']}</b></div>", unsafe_allow_html=True)
+                st.markdown(f"<div style='background:#fef2f2; padding:1.5rem; border-radius:12px; border:1px solid #fecdd3; margin-top:10px;'><span class='status-tag tag-eng'>Objetivo para o ano</span><br><b>{sel['objetivo']}</b></div>", unsafe_allow_html=True)
                 if st.button("Adicionar à Lista ➕", key="bt_i"):
                     st.session_state.conteudos_selecionados.append({'tipo': 'Inglês', 'eixo': sel['eixo'], 'geral': g, 'especifico': e, 'objetivo': sel['objetivo']})
                     st.toast("Item adicionado!")
@@ -321,7 +321,7 @@ elif st.session_state.step == 3:
         st.markdown('<div class="card-container">', unsafe_allow_html=True)
         st.markdown("<div style='color:#be123c; font-weight:800; font-size:0.8rem; margin-bottom:1.5rem;'>TODOS OS CAMPOS SÃO OBRIGATÓRIOS PARA A EMISSÃO OFICIAL</div>", unsafe_allow_html=True)
         
-        obj_esp = st.text_area("OBJECTIVOS ESPECÍFICOS DA AULA", height=120, placeholder="Defina os resultados práticos pretendidos...", value=st.session_state.config.get('obj_esp', ''))
+        obj_esp = st.text_area("OBJETIVOS ESPECÍFICOS", height=120, placeholder="Defina os resultados práticos pretendidos...", value=st.session_state.config.get('obj_esp', ''))
         
         c1, c2 = st.columns(2)
         with c1: sit = st.text_area("SITUAÇÃO DIDÁTICA / METODOLOGIA", height=220, placeholder="Passo a passo da atividade...", value=st.session_state.config.get('sit', ''))
@@ -390,10 +390,10 @@ elif st.session_state.step == 3:
             w_file = gerar_docx(f_data, st.session_state.conteudos_selecionados)
             p_file = gerar_pdf(f_data, st.session_state.conteudos_selecionados)
             nome_arq = f"Planeamento_{f_data['mes']}_{f_data['ano'].replace(' ','')}"
-            st.success("✅ Documentação gerada com sucesso!"); st.balloons()
+            st.success("✅ Documentação gerada com sucesso! Envie o arquivo em PDF ao professor coordenador para validação."); st.balloons()
             cd1, cd2 = st.columns(2)
-            cd1.download_button("📄 Descarregar WORD", w_file, f"{nome_arq}.docx", use_container_width=True)
-            cd2.download_button("📕 Descarregar PDF", p_file, f"{nome_arq}.pdf", use_container_width=True)
+            cd1.download_button("📄 Download em WORD", w_file, f"{nome_arq}.docx", use_container_width=True)
+            cd2.download_button("📕 Download em PDF", p_file, f"{nome_arq}.pdf", use_container_width=True)
 
 # --- RODAPÉ ---
 st.markdown(f"""
@@ -402,3 +402,4 @@ st.markdown(f"""
         Desenvolvido por José Victor Souza Gallo • CEIEF Rafael Affonso Leite © {datetime.now().year}
     </div>
 """, unsafe_allow_html=True)
+
