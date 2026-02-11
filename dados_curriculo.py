@@ -2,7 +2,49 @@
 # Baseado INTEGRALMENTE nas tabelas oficiais do Currículo Fundamental e Infantil Linguagens e Tecnologias (2025)
 
 CURRICULO_DB = {
-    # ==============================================================================
+    "Maternal I": {
+        "LINGUAGEM VERBAL": [
+            # ORALIDADE
+            {"eixo": "ORALIDADE", "geral": "Comunicação e Linguagem", "especifico": "Pronúncia e articulação correta das palavras; nomeação de pessoas e objetos.", "objetivo": "Pronunciar as palavras com maior clareza e verbalizar palavras complexas (MI-1, MI-2).", "trimestre": "Contínuo"},
+            {"eixo": "ORALIDADE", "geral": "Comunicação e Linguagem", "especifico": "Comunicação oral em situações cotidianas (diálogo face a face) e sobre fatos vividos.", "objetivo": "Participar de diálogos e desenvolver escuta atenta (MI-4, MI-5).", "trimestre": "Contínuo"},
+            {"eixo": "ORALIDADE", "geral": "Tradição Oral", "especifico": "Reprodução de memória de brincos, parlendas, cantigas, quadrinhas e poemas.", "objetivo": "Conhecer e reproduzir de memória textos da tradição oral (MI-8, MI-9).", "trimestre": "Contínuo"},
+            {"eixo": "ORALIDADE", "geral": "Comunicação", "especifico": "Reconto oral de histórias simples com apoio mnemônico.", "objetivo": "Recontar fatos vividos e histórias simples (MI-10, MI-12).", "trimestre": "Contínuo"},
+            # LEITURA
+            {"eixo": "LEITURA", "geral": "Leitura de diferentes gêneros", "especifico": "Identificação do próprio nome (etiquetas, crachás com/sem foto) e comparação entre nomes.", "objetivo": "Reconhecer a forma escrita do próprio nome e ler não convencionalmente (MI-2, MI-3).", "trimestre": "Contínuo"},
+            {"eixo": "LEITURA", "geral": "Procedimento Leitor", "especifico": "Manuseio adequado de diferentes portadores textuais (livros sensoriais, álbuns, pop-ups).", "objetivo": "Aprender a manusear adequadamente os portadores textuais (MI-9).", "trimestre": "Contínuo"},
+            {"eixo": "LEITURA", "geral": "Compreensão", "especifico": "Representação de ideias por meio de rabiscos, desenhos e pinturas a partir do texto lido.", "objetivo": "Representar ideias de diferentes formas a partir dos indícios do texto (MI-11).", "trimestre": "Contínuo"},
+            # ANÁLISE LINGUÍSTICA
+            {"eixo": "ANÁLISE LINGUÍSTICA", "geral": "Sons e Unidades Sonoras", "especifico": "Percepção sonora diversa (corporal, animais, instrumentos, fenômenos).", "objetivo": "Desenvolver o refinamento da percepção auditiva de sons em geral (MI-1).", "trimestre": "Contínuo"},
+            {"eixo": "ANÁLISE LINGUÍSTICA", "geral": "Sistema de Escrita", "especifico": "Conhecimento das letras e aquisição do sistema de escrita.", "objetivo": "Conhecer as letras através do Alfabeto em contextos reais (MI-4).", "trimestre": "Contínuo"},
+            # PRODUÇÃO
+            {"eixo": "PRODUÇÃO", "geral": "Práticas de Escrita", "especifico": "Uso de instrumentos reais de registro (giz, lápis jumbo, pincéis, areia).", "objetivo": "Aprender que a língua escrita é um instrumento de interação social (MI-1).", "trimestre": "Contínuo"}
+        ],
+        "LINGUAGEM MATEMÁTICA": [
+            # ÁLGEBRA
+            {"eixo": "ÁLGEBRA", "geral": "Comparação e Classificação", "especifico": "Comparação, classificação e seriação de objetos por semelhanças, diferenças, cor ou tamanho.", "objetivo": "Reconhecer e realizar agrupamentos de objetos e ordenar elementos de forma lúdica (MI-2, MI-3).", "trimestre": "1º e 2º Trimestres"},
+            # GEOMETRIA
+            {"eixo": "GEOMETRIA", "geral": "Localização Espacial", "especifico": "Direcionalidade (frente/atrás, em cima/embaixo, dentro/fora) e proximidade (perto/longe).", "objetivo": "Brincar com o próprio corpo em diferentes posições e movimentos no espaço (MI-1).", "trimestre": "Contínuo"},
+            {"eixo": "GEOMETRIA", "geral": "Formas e Figuras", "especifico": "Identificação de figuras planas (quadrado, retângulo, triângulo e círculo) e espaciais.", "objetivo": "Identificar e nomear figuras geométricas em diferentes posições (MI-5, MI-6).", "trimestre": "Contínuo"},
+            # GRANDEZAS E MEDIDAS
+            {"eixo": "GRANDEZAS E MEDIDAS", "geral": "Noções de Tempo", "especifico": "Ontem/hoje/amanhã, períodos do dia, velocidades de movimento (rápido/lento) e calendário.", "objetivo": "Reconhecer a ordem dos acontecimentos e explorar ritmos corporais (MI-1, MI-3).", "trimestre": "Contínuo"},
+            {"eixo": "GRANDEZAS E MEDIDAS", "geral": "Medidas não padronizadas", "especifico": "Capacidade, espessura, massa, temperatura e distância (maior/menor, leve/pesado).", "objetivo": "Explorar concretamente grandezas através de medidas não padronizadas (MI-4).", "trimestre": "Contínuo"},
+            # NÚMEROS
+            {"eixo": "NÚMEROS", "geral": "Sistema de Numeração", "especifico": "Recitação numérica (mínimo até 10) e função social do número em contextos reais.", "objetivo": "Participar da récita numérica e registrar quantidades de forma não convencional (MI-1, MI-4).", "trimestre": "Contínuo"},
+            {"eixo": "NÚMEROS", "geral": "Operações Lúdicas", "especifico": "Ideia de juntar (adição) e retirar (subtração) em situações de brincadeira.", "objetivo": "Vivenciar e participar de situações lúdicas que envolvam a ideia de adicionar ou subtrair (MI-7, MI-8).", "trimestre": "Contínuo"}
+        ],
+        "INDIVÍDUO E SOCIEDADE": [
+            # CIÊNCIAS NATURAIS
+            {"eixo": "CIÊNCIAS NATURAIS", "geral": "Ecossistema", "especifico": "Diferenciação entre bióticos (plantas/animais) e abióticos (pedras/brinquedos/água/ar/sol).", "objetivo": "Explorar o ambiente escolar reconhecendo elementos vivos e não vivos (MI-1, MI-2).", "trimestre": "Contínuo"},
+            {"eixo": "CIÊNCIAS NATURAIS", "geral": "Matéria e Energia", "especifico": "Luz solar (dia/noite) e fenômenos naturais (vento, chuva, raio, trovão).", "objetivo": "Perceber a presença do ar e variações do clima no cotidiano (MI-4, MI-5).", "trimestre": "Contínuo"},
+            {"eixo": "CIÊNCIAS NATURAIS", "geral": "Reino Vegetal e Animal", "especifico": "Cuidado com plantas e animais; partes das árvores e necessidades vitais dos seres vivos.", "objetivo": "Participar de situações de plantio e cuidado com seres vivos (MI-7, MI-10).", "trimestre": "Contínuo"},
+            {"eixo": "CIÊNCIAS NATURAIS", "geral": "Saúde e Nutrição", "especifico": "Higiene pessoal e do ambiente; alimentação saudável e características sensoriais dos alimentos.", "objetivo": "Praticar hábitos de higiene e descobrir sabores, cores e texturas (MI-12, MI-14).", "trimestre": "Contínuo"},
+            {"eixo": "CIÊNCIAS NATURAIS", "geral": "Anatomia Humana", "especifico": "Partes externas do próprio corpo e órgãos dos sentidos.", "objetivo": "Explorar o próprio corpo e vivenciar experiências sensoriais (MI-14, MI-15).", "trimestre": "Contínuo"},
+            # CIÊNCIAS HUMANAS
+            {"eixo": "CIÊNCIAS HUMANAS", "geral": "Sujeito Histórico", "especifico": "Identidade pessoal e do grupo; regras de convivência e expressão de desejos/sentimentos.", "objetivo": "Reconhecer sua própria imagem e praticar regras de convivência (MI-1, MI-3).", "trimestre": "Contínuo"},
+            {"eixo": "CIÊNCIAS HUMANAS", "geral": "Temporalidade", "especifico": "Rotina diária, sequência das ações e organização do tempo escolar.", "objetivo": "Observar a sequência das ações na rotina e compreender o tempo vivido (MI-1).", "trimestre": "Contínuo"},
+            {"eixo": "CIÊNCIAS HUMANAS", "geral": "Fatos Históricos", "especifico": "Tradições culturais, hinos (Nacional/Municipal) e símbolos pátrios.", "objetivo": "Participar de práticas culturais e observar bandeiras e cores (MI-1).", "trimestre": "Contínuo"}
+        ]
+    },    # ==============================================================================
     # 1º ANO
     # ==============================================================================
     "1º Ano": {
@@ -2776,3 +2818,4 @@ CURRICULO_DB = {
         ]
     }
 }
+
