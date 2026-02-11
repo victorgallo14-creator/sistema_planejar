@@ -265,7 +265,7 @@ elif st.session_state.step == 2:
         dados = CURRICULO_DB.get(ano_sel, {})
         
         # DEFINIÇÃO DE INFANTIL VS FUNDAMENTAL
-        infantil_anos = ["Maternal I", "Maternal II", "Etapa I", "Etapa II"]
+        infantil_anos = ["Maternal I"]
         
         if ano_sel in infantil_anos:
             abas = st.tabs(["🗣️ Linguagem Verbal", "🔢 Linguagem Matemática", "👥 Indivíduo e Sociedade"])
@@ -414,3 +414,4 @@ st.markdown(f"""
         Desenvolvido por José Victor Souza Gallo • CEIEF Rafael Affonso Leite © {datetime.now().year}
     </div>
 """, unsafe_allow_html=True)
+
