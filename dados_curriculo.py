@@ -2,6 +2,530 @@
 # Baseado INTEGRALMENTE nas tabelas oficiais do Currículo Fundamental e Infantil Linguagens e Tecnologias (2025)
 
 CURRICULO_DB = {
+        # ==============================================================================
+    # EDUCAÇÃO INFANTIL - MATERNAL II
+    # ==============================================================================
+    "Maternal II": {
+        "CULTURA DIGITAL": [
+            {
+                "eixo": "CULTURA DIGITAL",
+                "geral": "CIDADANIA DIGITAL",
+                "especifico": "Exploração mediada de tecnologias digitais, aprendendo a usar os equipamentos com cuidado, dividindo com os colegas e agindo com responsabilidade durante as brincadeiras e descobertas no ambiente digital.",
+                "objetivo": "Vivenciar o uso de tecnologias digitais com mediação do adulto, aprendendo a manusear os equipamentos com cuidado (EI03CO10).",
+                "trimestre": "1º e 2º Trimestres"
+            },
+            {
+                "eixo": "CULTURA DIGITAL",
+                "geral": "CIDADANIA DIGITAL",
+                "especifico": "Compreensão de que ficar muito tempo em frente às telas pode cansar os olhos, prejudicar a postura, deixar o corpo e a mente cansados.",
+                "objetivo": "Adotar hábitos saudáveis no uso de tecnologias digitais, com apoio docente (EI03CO11).",
+                "trimestre": "1º e 2º Trimestres"
+            },
+            {
+                "eixo": "CULTURA DIGITAL",
+                "geral": "TECNOLOGIA E SOCIEDADE",
+                "especifico": "Exploração de jogos e brincadeiras que envolvam escolhas, desafios em etapas e decisões lúdicas, estimulando a curiosidade e o raciocínio.",
+                "objetivo": "Participar de jogos e brincadeiras que envolvam escolhas e descobertas.",
+                "trimestre": "1º e 3º Trimestres"
+            }
+        ],
+        "MUNDO DIGITAL": [
+            {
+                "eixo": "MUNDO DIGITAL",
+                "geral": "USO DE TECNOLOGIAS COMPUTACIONAIS",
+                "especifico": "Exploração de objetos e aparelhos do cotidiano em situações lúdicas, percebendo características como ligado/desligado, aberto/fechado.",
+                "objetivo": "Identificar, com apoio do adulto, diferentes tipos de aparelhos e objetos do dia a dia (EI03CO07).",
+                "trimestre": "1º e 2º Trimestres"
+            },
+            {
+                "eixo": "MUNDO DIGITAL",
+                "geral": "USO DE TECNOLOGIAS COMPUTACIONAIS",
+                "especifico": "Exploração de objetos e aparelhos do cotidiano que apresentem botões, telas, alavancas e sensores, interagindo com eles com apoio docente.",
+                "objetivo": "Reconhecer, com apoio do adulto, que alguns objetos e aparelhos funcionam quando são tocados, apertados ou ligados (EI03CO08).",
+                "trimestre": "1º, 2º e 3º Trimestres"
+            },
+            {
+                "eixo": "MUNDO DIGITAL",
+                "geral": "USO DE TECNOLOGIAS COMPUTACIONAIS",
+                "especifico": "Exploração de dispositivos computacionais (tablets, celulares e computadores), observando suas formas de uso (tocar na tela, apertar botões).",
+                "objetivo": "Reconhecer, com apoio docente, diferentes dispositivos computacionais do cotidiano (EI03CO09).",
+                "trimestre": "2º e 3º Trimestres"
+            }
+        ],
+        "PENSAMENTO COMPUTACIONAL": [
+            {
+                "eixo": "PENSAMENTO COMPUTACIONAL",
+                "geral": "CONCEITUAÇÃO DE ALGORITMOS",
+                "especifico": "Identificação de repetições em sequências de sons, gestos, movimentos corporais ou elementos visuais.",
+                "objetivo": "Identificar, com apoio docente, repetições em sequências (EI03CO01).",
+                "trimestre": "2º e 3º Trimestres"
+            },
+            {
+                "eixo": "PENSAMENTO COMPUTACIONAL",
+                "geral": "CONCEITUAÇÃO DE ALGORITMOS",
+                "especifico": "Realização de tarefas (organizar materiais ou seguir passos em uma brincadeira), reconhecendo que cada ação tem uma sequência.",
+                "objetivo": "Organizar, com apoio docente, ações em sequência (EI03CO02).",
+                "trimestre": "1º e 2º Trimestres"
+            },
+            {
+                "eixo": "PENSAMENTO COMPUTACIONAL",
+                "geral": "CONCEITUAÇÃO DE ALGORITMOS",
+                "especifico": "Organização de ações em ordem, a fim de alcançar um resultado em brincadeiras com objetos físicos ou tecnológicos.",
+                "objetivo": "Realizar ações em sequência, com apoio docente, para alcançar um resultado (EI03CO03).",
+                "trimestre": "2º e 3º Trimestres"
+            },
+            {
+                "eixo": "PENSAMENTO COMPUTACIONAL",
+                "geral": "CONCEITUAÇÃO DE ALGORITMOS",
+                "especifico": "Exploração de diferentes maneiras de alcançar um mesmo objetivo em brincadeiras, percebendo que há mais de um caminho possível.",
+                "objetivo": "Vivenciar, com apoio docente, diferentes formas de resolver um mesmo desafio (EI03CO05).",
+                "trimestre": "3º Trimestre"
+            },
+            {
+                "eixo": "PENSAMENTO COMPUTACIONAL",
+                "geral": "PRÁTICAS CRIADORAS",
+                "especifico": "Exploração e construção de objetos com materiais não estruturados (caixas, rolos, tampinhas).",
+                "objetivo": "Construir objetos usando materiais não estruturados.",
+                "trimestre": "1º, 2º e 3º Trimestres"
+            }
+        ],
+        "INGLÊS: ORALIDADE": [
+            {
+                "eixo": "ORALIDADE",
+                "geral": "DIMENSÃO INTERCULTURAL",
+                "especifico": "Reconhecimento da presença da língua inglesa em situações cotidianas (músicas, brincadeiras).",
+                "objetivo": "Identificar a presença da língua inglesa no cotidiano.",
+                "trimestre": "1º, 2º e 3º Trimestres"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "SAUDAÇÕES",
+                "especifico": "Reconhecimento e uso de saudações básicas: Hi, Hello, Bye, Good Morning.",
+                "objetivo": "Reconhecer saudações em inglês.",
+                "trimestre": "1º, 2º e 3º Trimestres"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "IDENTIFICAÇÃO PESSOAL",
+                "especifico": "Utilização dos termos 'boy' e 'girl' para se apresentar e reconhecer a si mesmo e aos colegas.",
+                "objetivo": "Identificar-se como 'Boy' ou 'Girl'.",
+                "trimestre": "1º Trimestre"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "IDENTIFICAÇÃO PESSOAL",
+                "especifico": "Vivência da pergunta 'What’s your name?' e a resposta 'My name is...'.",
+                "objetivo": "Reconhecer e expressar o próprio nome em inglês.",
+                "trimestre": "1º e 2º Trimestres"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "CORPO HUMANO",
+                "especifico": "Reconhecimento e nomeação: Head, Hands, Feet, Nose, Mouth.",
+                "objetivo": "Identificar as partes do corpo em língua inglesa.",
+                "trimestre": "2º e 3º Trimestres"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "CORES",
+                "especifico": "Identificação das cores Red, Blue e Yellow.",
+                "objetivo": "Identificar as cores primárias em inglês.",
+                "trimestre": "2º e 3º Trimestres"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "NÚMEROS",
+                "especifico": "Reconhecimento dos numerais de 1 a 5.",
+                "objetivo": "Identificar oralmente os numerais (1-5).",
+                "trimestre": "2º e 3º Trimestres"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "FAMÍLIA",
+                "especifico": "Reconhecimento e utilização dos termos 'mom' e 'dad'.",
+                "objetivo": "Identificar os membros da família em inglês.",
+                "trimestre": "2º e 3º Trimestres"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "MATERIAL ESCOLAR",
+                "especifico": "Reconhecimento de objetos: Pencil, Book, Crayon, Backpack, Paper.",
+                "objetivo": "Identificar e nomear os objetos da sala de aula.",
+                "trimestre": "3º Trimestre"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "ELEMENTOS DA NATUREZA",
+                "especifico": "Identificação de: Sun, Tree, Flower, Rain, Water.",
+                "objetivo": "Conhecer e utilizar o vocabulário relativo aos elementos da natureza.",
+                "trimestre": "3º Trimestre"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "ANIMAIS",
+                "especifico": "Reconhecimento de: Dog, Cat, Cow, Duck, Fish.",
+                "objetivo": "Reconhecer e nomear os animais em língua inglesa.",
+                "trimestre": "3º Trimestre"
+            }
+        ]
+    },
+
+    # ==============================================================================
+    # EDUCAÇÃO INFANTIL - ETAPA I
+    # ==============================================================================
+    "Etapa I": {
+        "CULTURA DIGITAL": [
+            {
+                "eixo": "CULTURA DIGITAL",
+                "geral": "CIDADANIA DIGITAL",
+                "especifico": "Exploração mediada de tecnologias digitais, aprendendo a usar equipamentos com cuidado e responsabilidade.",
+                "objetivo": "Vivenciar o uso de tecnologias digitais com mediação do adulto (EI03CO10).",
+                "trimestre": "2º e 3º Trimestres"
+            },
+            {
+                "eixo": "CULTURA DIGITAL",
+                "geral": "CIDADANIA DIGITAL",
+                "especifico": "Compreensão de que ficar muito tempo em frente às telas pode cansar e prejudicar a postura.",
+                "objetivo": "Adotar hábitos saudáveis no uso de tecnologias digitais (EI03CO11).",
+                "trimestre": "2º Trimestre"
+            },
+            {
+                "eixo": "CULTURA DIGITAL",
+                "geral": "TECNOLOGIA E SOCIEDADE",
+                "especifico": "Participação em jogos e brincadeiras com etapas sequenciais e pequenas decisões, incentivando a autonomia.",
+                "objetivo": "Explorar jogos e brincadeiras que incentivem a tomada de decisões.",
+                "trimestre": "1º Trimestre"
+            }
+        ],
+        "MUNDO DIGITAL": [
+            {
+                "eixo": "MUNDO DIGITAL",
+                "geral": "USO DE TECNOLOGIAS COMPUTACIONAIS",
+                "especifico": "Exploração de objetos e aparelhos do cotidiano (lanternas, rádios), observando se estão ligados ou desligados.",
+                "objetivo": "Reconhecer, com apoio docente, diferentes aparelhos e objetos do cotidiano (EI03CO07).",
+                "trimestre": "1º Trimestre"
+            },
+            {
+                "eixo": "MUNDO DIGITAL",
+                "geral": "USO DE TECNOLOGIAS COMPUTACIONAIS",
+                "especifico": "Exploração de objetos que respondem ao toque, aperto ou movimento, percebendo interfaces como botões, telas e sensores.",
+                "objetivo": "Explorar objetos do cotidiano e perceber como nos comunicamos com eles (EI03CO08).",
+                "trimestre": "2º Trimestre"
+            },
+            {
+                "eixo": "MUNDO DIGITAL",
+                "geral": "USO DE TECNOLOGIAS COMPUTACIONAIS",
+                "especifico": "Exploração de dispositivos computacionais (celulares, tablets), observando como funcionam e como interagimos com eles.",
+                "objetivo": "Reconhecer diferentes dispositivos computacionais do cotidiano (EI03CO09).",
+                "trimestre": "3º Trimestre"
+            }
+        ],
+        "PENSAMENTO COMPUTACIONAL": [
+            {
+                "eixo": "PENSAMENTO COMPUTACIONAL",
+                "geral": "CONCEITUAÇÃO DE ALGORITMOS",
+                "especifico": "Exploração de padrões repetitivos em sons, gestos, movimentos e imagens.",
+                "objetivo": "Identificar e compreender padrões de repetição (EI03CO01).",
+                "trimestre": "1º Trimestre"
+            },
+            {
+                "eixo": "PENSAMENTO COMPUTACIONAL",
+                "geral": "CONCEITUAÇÃO DE ALGORITMOS",
+                "especifico": "Participação em atividades rotineiras (lavar mãos, guardar brinquedos), percebendo a sequência de ações.",
+                "objetivo": "Compreender que algumas tarefas têm uma sequência de ações (EI03CO02).",
+                "trimestre": "1º Trimestre"
+            },
+            {
+                "eixo": "PENSAMENTO COMPUTACIONAL",
+                "geral": "CONCEITUAÇÃO DE ALGORITMOS",
+                "especifico": "Organização de ações em sequência (empilhar blocos, seguir trilhas), percebendo que as etapas ajudam a completar a tarefa.",
+                "objetivo": "Realizar ações em ordem para alcançar um resultado (EI03CO03).",
+                "trimestre": "2º Trimestre"
+            },
+            {
+                "eixo": "PENSAMENTO COMPUTACIONAL",
+                "geral": "CONCEITUAÇÃO DE ALGORITMOS",
+                "especifico": "Reconhecimento de diferentes caminhos ou sequências de ações para resolver uma mesma situação.",
+                "objetivo": "Identificar diferentes formas de resolver um mesmo desafio (EI03CO05).",
+                "trimestre": "3º Trimestre"
+            },
+            {
+                "eixo": "PENSAMENTO COMPUTACIONAL",
+                "geral": "PRÁTICAS CRIADORAS",
+                "especifico": "Exploração e construção de objetos com materiais não estruturados.",
+                "objetivo": "Construir objetos usando materiais não estruturados.",
+                "trimestre": "1º, 2º e 3º Trimestres"
+            }
+        ],
+        "INGLÊS: ORALIDADE": [
+            {
+                "eixo": "ORALIDADE",
+                "geral": "DIMENSÃO INTERCULTURAL",
+                "especifico": "Reconhecimento da presença da língua inglesa em situações cotidianas.",
+                "objetivo": "Identificar a presença da língua inglesa no cotidiano.",
+                "trimestre": "1º, 2º e 3º Trimestres"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "SAUDAÇÕES",
+                "especifico": "Reconhecimento e utilização de: Good afternoon, Good night, How are you?, I'm fine, Thank you.",
+                "objetivo": "Reconhecer saudações em inglês.",
+                "trimestre": "1º, 2º e 3º Trimestres"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "SENTIMENTOS",
+                "especifico": "Reconhecimento e utilização de: Happy, Sad, Angry, Scared, Tired.",
+                "objetivo": "Usar expressões que demonstrem sentimentos.",
+                "trimestre": "3º Trimestre"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "CORPO HUMANO",
+                "especifico": "Reconhecimento e nomeação: Eyes, Ears, Arms, Legs, Tummy.",
+                "objetivo": "Identificar as partes do corpo em inglês.",
+                "trimestre": "1º e 2º Trimestres"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "CORES",
+                "especifico": "Identificação das cores secundárias: Orange, Green, Purple.",
+                "objetivo": "Identificar as cores secundárias em língua inglesa.",
+                "trimestre": "1º e 2º Trimestres"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "NÚMEROS",
+                "especifico": "Reconhecimento dos numerais de 1 a 10.",
+                "objetivo": "Identificar oralmente os numerais (1-10).",
+                "trimestre": "2º Trimestre"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "FAMÍLIA",
+                "especifico": "Utilização dos termos 'brother' e 'sister'.",
+                "objetivo": "Identificar os membros da família em inglês.",
+                "trimestre": "2º Trimestre"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "MATERIAL ESCOLAR",
+                "especifico": "Reconhecimento de: Eraser, Glue, Scissors, Ruler, Chair.",
+                "objetivo": "Identificar e nomear os objetos da sala de aula.",
+                "trimestre": "2º Trimestre"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "ELEMENTOS DA NATUREZA",
+                "especifico": "Identificação de: Cloud, Wind, Leaf, Sky, Soil.",
+                "objetivo": "Aprender e aplicar vocabulário sobre elementos da natureza.",
+                "trimestre": "3º Trimestre"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "ANIMAIS",
+                "especifico": "Reconhecimento de: Horse, Pig, Chicken, Bird, Frog.",
+                "objetivo": "Reconhecer e nomear os animais em língua inglesa.",
+                "trimestre": "3º Trimestre"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "TEMPO E CLIMA",
+                "especifico": "Exploração de: Sunny, Rainy, Cloudy.",
+                "objetivo": "Identificar elementos relacionados ao tempo e ao clima.",
+                "trimestre": "3º Trimestre"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "ALFABETO",
+                "especifico": "Reconhecimento de fonemas das vogais.",
+                "objetivo": "Identificar os sons das letras (vogais).",
+                "trimestre": "2º e 3º Trimestres"
+            }
+        ]
+    },
+
+    # ==============================================================================
+    # EDUCAÇÃO INFANTIL - ETAPA II
+    # ==============================================================================
+    "Etapa II": {
+        "CULTURA DIGITAL": [
+            {
+                "eixo": "CULTURA DIGITAL",
+                "geral": "CIDADANIA DIGITAL",
+                "especifico": "Utilização dos equipamentos com maior autonomia, cuidando deles com responsabilidade e respeitando os colegas.",
+                "objetivo": "Vivenciar o uso de tecnologias digitais com mediação do adulto (EI03CO10).",
+                "trimestre": "1º Trimestre"
+            },
+            {
+                "eixo": "CULTURA DIGITAL",
+                "geral": "CIDADANIA DIGITAL",
+                "especifico": "Compreensão de que ficar muito tempo em frente às telas pode cansar e prejudicar o corpo.",
+                "objetivo": "Adotar hábitos saudáveis no uso de tecnologias digitais (EI03CO11).",
+                "trimestre": "1º e 2º Trimestres"
+            },
+            {
+                "eixo": "CULTURA DIGITAL",
+                "geral": "TECNOLOGIA E SOCIEDADE",
+                "especifico": "Exploração de jogos e brincadeiras que envolvam planejamento, escolhas e resolução de desafios em etapas.",
+                "objetivo": "Vivenciar situações lúdicas que envolvam planejamento e escolhas.",
+                "trimestre": "1º, 2º e 3º Trimestres"
+            }
+        ],
+        "MUNDO DIGITAL": [
+            {
+                "eixo": "MUNDO DIGITAL",
+                "geral": "USO DE TECNOLOGIAS COMPUTACIONAIS",
+                "especifico": "Reconhecimento com autonomia de diferentes aparelhos e objetos tecnológicos, observando se estão ligados/desligados.",
+                "objetivo": "Compreender as funções básicas de diferentes aparelhos (EI03CO07).",
+                "trimestre": "1º e 2º Trimestres"
+            },
+            {
+                "eixo": "MUNDO DIGITAL",
+                "geral": "USO DE TECNOLOGIAS COMPUTACIONAIS",
+                "especifico": "Exploração de objetos com diferentes formas de interação (botões, telas sensíveis ao toque, sensores).",
+                "objetivo": "Explorar com autonomia objetos que respondem ao toque (EI03CO08).",
+                "trimestre": "2º Trimestre"
+            },
+            {
+                "eixo": "MUNDO DIGITAL",
+                "geral": "USO DE TECNOLOGIAS COMPUTACIONAIS",
+                "especifico": "Exploração de dispositivos computacionais variados, observando como interagir (tocar, falar, deslizar).",
+                "objetivo": "Identificar com autonomia diferentes dispositivos computacionais (EI03CO09).",
+                "trimestre": "2º e 3º Trimestres"
+            }
+        ],
+        "PENSAMENTO COMPUTACIONAL": [
+            {
+                "eixo": "PENSAMENTO COMPUTACIONAL",
+                "geral": "CONCEITUAÇÃO DE ALGORITMOS",
+                "especifico": "Observação e compreensão de padrões repetitivos em sequências, antecipando o que vem a seguir.",
+                "objetivo": "Observação e reconhecimento de padrões em sequências (EI03CO01).",
+                "trimestre": "1º Trimestre"
+            },
+            {
+                "eixo": "PENSAMENTO COMPUTACIONAL",
+                "geral": "CONCEITUAÇÃO DE ALGORITMOS",
+                "especifico": "Realização de tarefas cotidianas e brincadeiras que envolvem etapas, expressando a sequência.",
+                "objetivo": "Expressar, com autonomia, a sequência de ações (EI03CO02).",
+                "trimestre": "1º Trimestre"
+            },
+            {
+                "eixo": "PENSAMENTO COMPUTACIONAL",
+                "geral": "CONCEITUAÇÃO DE ALGORITMOS",
+                "especifico": "Execução de sequências de ações em brincadeiras dirigidas (jogos de percurso, desafios).",
+                "objetivo": "Seguir, com autonomia, sequências de ações (EI03CO03).",
+                "trimestre": "2º Trimestre"
+            },
+            {
+                "eixo": "PENSAMENTO COMPUTACIONAL",
+                "geral": "CONCEITUAÇÃO DE ALGORITMOS",
+                "especifico": "Memorização e reprodução de sequências de ações em atividades lúdicas.",
+                "objetivo": "Recordar e organizar pequenas sequências de ações (EI03CO04).",
+                "trimestre": "2º Trimestre"
+            },
+            {
+                "eixo": "PENSAMENTO COMPUTACIONAL",
+                "geral": "CONCEITUAÇÃO DE ALGORITMOS",
+                "especifico": "Observação de sequências de ações, percebendo semelhanças e diferenças entre soluções.",
+                "objetivo": "Observar e comparar diferentes formas de resolver um desafio (EI03CO05).",
+                "trimestre": "2º e 3º Trimestres"
+            },
+            {
+                "eixo": "PENSAMENTO COMPUTACIONAL",
+                "geral": "PRÁTICAS CRIADORAS",
+                "especifico": "Exploração e construção de objetos com materiais não estruturados.",
+                "objetivo": "Construir objetos usando materiais não estruturados.",
+                "trimestre": "1º, 2º e 3º Trimestres"
+            }
+        ],
+        "INGLÊS: ORALIDADE": [
+            {
+                "eixo": "ORALIDADE",
+                "geral": "DIMENSÃO INTERCULTURAL",
+                "especifico": "Reconhecimento da presença da língua inglesa em situações cotidianas.",
+                "objetivo": "Identificar a presença da língua inglesa no cotidiano.",
+                "trimestre": "1º, 2º e 3º Trimestres"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "SAUDAÇÕES",
+                "especifico": "Uso de: Nice to meet you, See you later, Good evening, What’s up?, Please.",
+                "objetivo": "Reconhecer saudações em inglês.",
+                "trimestre": "1º, 2º e 3º Trimestres"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "SENTIMENTOS",
+                "especifico": "Uso de: Excited, Nervous, Surprised, Sorry.",
+                "objetivo": "Reconhecer e usar palavras que representem sentimentos.",
+                "trimestre": "2º Trimestre"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "CORPO HUMANO",
+                "especifico": "Nomeação de: Fingers, Toes, Shoulders, Knees, Back.",
+                "objetivo": "Identificar as partes do corpo em língua inglesa.",
+                "trimestre": "1º e 2º Trimestres"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "CORES",
+                "especifico": "Identificação de: Pink, Brown, Black, White, Gray.",
+                "objetivo": "Identificar as cores no idioma inglês.",
+                "trimestre": "1º Trimestre"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "NÚMEROS",
+                "especifico": "Reconhecimento dos numerais de 1 a 20.",
+                "objetivo": "Identificar oralmente os numerais (1-20).",
+                "trimestre": "1º, 2º e 3º Trimestres"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "FAMÍLIA",
+                "especifico": "Utilização dos termos 'grandpa' e 'grandma'.",
+                "objetivo": "Reconhecer e nomear os membros da família.",
+                "trimestre": "2º Trimestre"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "MATERIAL ESCOLAR",
+                "especifico": "Nomeação de: Sharpener, Desk, Marker, Notebook, Paintbrush, Paint.",
+                "objetivo": "Identificar e nomear os objetos da sala de aula.",
+                "trimestre": "2º Trimestre"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "ELEMENTOS DA NATUREZA",
+                "especifico": "Identificação de: Mountain, River, Ocean, Rock, Fire.",
+                "objetivo": "Explorar o vocabulário relacionado à natureza.",
+                "trimestre": "2º Trimestre"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "ANIMAIS",
+                "especifico": "Nomeação de: Lion, Elephant, Monkey, Bear, Snake.",
+                "objetivo": "Reconhecer e nomear os animais em inglês.",
+                "trimestre": "1º, 2º e 3º Trimestres"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "TEMPO E CLIMA",
+                "especifico": "Reconhecimento de: Windy, Stormy, Foggy.",
+                "objetivo": "Reconhecer e nomear condições climáticas.",
+                "trimestre": "3º Trimestre"
+            },
+            {
+                "eixo": "ORALIDADE",
+                "geral": "ALFABETO",
+                "especifico": "Reconhecimento de fonemas e ampliação do vocabulário.",
+                "objetivo": "Identificar os sons das letras do alfabeto.",
+                "trimestre": "1º, 2º e 3º Trimestres"
+            }
+        ]
+    },
     "Maternal I": {
         "LINGUAGEM VERBAL": [
             # ORALIDADE
@@ -2818,4 +3342,5 @@ CURRICULO_DB = {
         ]
     }
 }
+
 
