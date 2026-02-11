@@ -359,7 +359,7 @@ elif st.session_state.step == 3:
         
         horario_br = get_brazil_time().strftime("%d/%m/%Y %H:%M:%S")
         pdf.set_y(-20); pdf.set_font('Arial', 'I', 8)
-        pdf.cell(0, 10, f'Emitido pelo Sistema Planejar (GMT-3) em: {horario_br}', 0, 0, 'C')
+        pdf.cell(0, 10, f'Emitido pelo Sistema Planejar  em: {horario_br}', 0, 0, 'C')
         return pdf.output(dest='S').encode('latin-1')
 
     def gerar_docx(dados, conteudos):
@@ -377,7 +377,7 @@ elif st.session_state.step == 3:
             p = doc.add_paragraph(); p.add_run(l + ": ").bold = True; p.add_run(v)
         
         horario_br = get_brazil_time().strftime("%d/%m/%Y %H:%M:%S")
-        doc.add_paragraph(f"\nEmitido eletronicamente em: {horario_br} (GMT-3)")
+        doc.add_paragraph(f"\nEmitido eletronicamente em: {horario_br}")
         f = BytesIO(); doc.save(f); f.seek(0); return f
 
     c1, c2 = st.columns(2)
@@ -402,5 +402,6 @@ st.markdown(f"""
         Desenvolvido por José Victor Souza Gallo • CEIEF Rafael Affonso Leite © {datetime.now().year}
     </div>
 """, unsafe_allow_html=True)
+
 
 
