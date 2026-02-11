@@ -57,7 +57,7 @@ st.markdown("""
     }
     
     .block-container {
-        padding-top: 1rem !important;
+        padding-top: 4rem !important;
         max-width: 1100px !important;
     }
 
@@ -414,6 +414,7 @@ st.markdown(f"""
         Desenvolvido por José Victor Souza Gallo • CEIEF Rafael Affonso Leite © {datetime.now().year}
     </div>
 """, unsafe_allow_html=True)
+
 
 
 
