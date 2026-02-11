@@ -197,7 +197,7 @@ st.markdown(f"""
     </div>
     <div class="header-center-content">
         <h1 class="header-text-main">Sistema Planejar</h1>
-        <p class="header-text-sub">Gestão Pedagógica Digital • CEIEF Rafael Affonso Leite</p>
+        <p class="header-text-sub">Uso interno • CEIEF Rafael Affonso Leite</p>
     </div>
     <div class="header-logo-container" style="justify-content: flex-end;">
         {f'<img src="{logo_e_b64}" class="logo-img-header">' if logo_e_b64 else '<div style="font-size:3.5rem;">🏫</div>'}
@@ -391,3 +391,4 @@ st.markdown(f"""
         Desenvolvido por José Victor Souza Gallo • CEIEF Rafael Affonso Leite © {datetime.now().year}
     </div>
 """, unsafe_allow_html=True)
+
