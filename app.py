@@ -40,6 +40,13 @@ st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
     
+    /* ESTAS LINHAS ABAIXO SOMEM COM A BARRA E O RODAPÉ */
+    header {visibility: hidden;}
+    footer {visibility: hidden;}
+    #MainMenu {visibility: hidden;}
+    [data-testid="stStatusWidget"] {display: none;}
+    .stAppDeployButton {display:none;}
+    
     html, body, [class*="css"] {
         font-family: 'Outfit', sans-serif;
         color: #1e293b;
@@ -414,6 +421,7 @@ st.markdown(f"""
         Desenvolvido por José Victor Souza Gallo • CEIEF Rafael Affonso Leite © {datetime.now().year}
     </div>
 """, unsafe_allow_html=True)
+
 
 
 
