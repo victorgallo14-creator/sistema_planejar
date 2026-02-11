@@ -18,7 +18,7 @@ except ModuleNotFoundError:
 
 # --- 1. CONFIGURAÇÃO DE ALTA PERFORMANCE ---
 st.set_page_config(
-    page_title="Sistema Planejar | CEIEF Rafael Affonso Leite",
+    page_title="Sistema Planejar | CEIEF",
     layout="wide",
     page_icon="🎓",
     initial_sidebar_state="collapsed"
@@ -163,6 +163,7 @@ def clean(t):
     return t.encode('latin-1', 'replace').decode('latin-1') if t else ""
 
 # --- 4. RENDERIZAÇÃO DO CABEÇALHO ---
+st.write("") # Pula uma linha no topo conforme solicitado
 col_main, col_logo = st.columns([8, 2], vertical_alignment="center")
 
 with col_main:
@@ -437,11 +438,11 @@ elif st.session_state.step == 3:
             f_data = st.session_state.config
             w_file = gerar_docx(f_data, st.session_state.conteudos_selecionados)
             p_file = gerar_pdf(f_data, st.session_state.conteudos_selecionados)
-            nome_arq = f"Planejamento_{f_data['mes']}_{f_data['ano'].replace(' ','')}"
+            nome_arq = f"Planeamento_{f_data['mes']}_{f_data['ano'].replace(' ','')}"
             st.success("✅ Documentação gerada com sucesso!")
             cd1, cd2 = st.columns(2)
-            cd1.download_button("📄 Download em WORD", w_file, f"{nome_arq}.docx", use_container_width=True)
-            cd2.download_button("📕 Download em PDF", p_file, f"{nome_arq}.pdf", use_container_width=True)
+            cd1.download_button("📄 Descarregar WORD", w_file, f"{nome_arq}.docx", use_container_width=True)
+            cd2.download_button("📕 Descarregar PDF", p_file, f"{nome_arq}.pdf", use_container_width=True)
 
 # --- RODAPÉ ---
 st.markdown(f"""
@@ -450,4 +451,3 @@ st.markdown(f"""
         Desenvolvido por José Victor Souza Gallo • CEIEF Rafael Affonso Leite © {datetime.now().year}
     </div>
 """, unsafe_allow_html=True)
-
