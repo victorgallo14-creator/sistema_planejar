@@ -2,557 +2,371 @@ import streamlit as st
 from docx import Document
 from docx.shared import Pt, Cm, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
+from fpdf import FPDF
 from io import BytesIO
 import calendar
 from datetime import datetime
 import os
 import base64
 
-# --- CONFIGURAÇÃO DA PÁGINA (WIDE MODE & TITLE) ---
-st.set_page_config(
-    page_title="Sistema Planejar",
-    layout="wide",
-    page_icon="🎓",
-    initial_sidebar_state="collapsed"
-)
-
-# IMPORTAÇÃO DO CURRÍCULO
+# --- MATRIZ CURRICULAR ---
 try:
     from dados_curriculo import CURRICULO_DB
 except ModuleNotFoundError:
-    st.error("ERRO CRÍTICO: Base de dados curricular não encontrada.")
+    st.error("ERRO: Base de dados curricular não encontrada.")
     st.stop()
 
-# --- ESTILIZAÇÃO CSS AVANÇADA (PREMIUM UI) ---
+# --- 1. CONFIGURAÇÃO DE ALTA PERFORMANCE ---
+st.set_page_config(
+    page_title="Sistema Planejar | CEIEF",
+    layout="wide",
+    page_icon="🎓",
+    initial_sidebar_state="expanded"
+)
+
+# --- 2. GESTÃO DE ESTADO (INICIALIZAÇÃO ANTECIPADA) ---
+if 'step' not in st.session_state: 
+    st.session_state.step = 1
+if 'conteudos_selecionados' not in st.session_state: 
+    st.session_state.conteudos_selecionados = []
+if 'config' not in st.session_state: 
+    st.session_state.config = {}
+
+def set_step(s): 
+    st.session_state.step = s
+
+# --- 3. ESTILIZAÇÃO CSS (PREMIUM UI - OUTFIT FONT) ---
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
     
     html, body, [class*="css"] {
         font-family: 'Outfit', sans-serif;
         color: #1e293b;
-        background-color: #f8fafc;
     }
     
-    /* Header Premium */
+    .stApp {
+        background-color: #f8fafc;
+    }
+
+    /* BARRA LATERAL ENTERPRISE */
+    [data-testid="stSidebar"] {
+        background-color: #0f172a;
+        border-right: 1px solid #1e293b;
+    }
+    [data-testid="stSidebar"] * {
+        color: #f1f5f9 !important;
+    }
+
+    /* HEADER PREMIUM (O QUE VOCÊ GOSTOU) */
     .premium-header {
         background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-        padding: 2rem;
-        border-radius: 16px;
+        padding: 2.5rem;
+        border-radius: 20px;
         color: white;
         margin-bottom: 2rem;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 10px 25px -5px rgba(30, 58, 138, 0.3);
         display: flex;
         align-items: center;
         justify-content: space-between;
     }
     .header-text h1 {
         margin: 0;
-        font-weight: 700;
-        font-size: 2rem;
+        font-weight: 800;
+        font-size: 2.5rem;
         color: white;
+        letter-spacing: -1px;
     }
     .header-text p {
         margin: 5px 0 0 0;
         font-weight: 300;
         opacity: 0.9;
-        font-size: 1rem;
+        font-size: 1.1rem;
     }
 
-    /* Cards Modernos */
+    /* CARDS MODERNOS */
     .card-container {
         background: white;
-        border-radius: 12px;
-        padding: 1.5rem;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
         border: 1px solid #e2e8f0;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
     }
-    .card-container:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+    /* INPUTS PADRONIZADOS E VISÍVEIS */
+    .stTextInput input, .stTextArea textarea, .stSelectbox div[data-baseweb="select"] {
+        border: 1.5px solid #cbd5e1 !important;
+        border-radius: 12px !important;
+        background-color: #ffffff !important;
+        color: #0f172a !important;
+        font-weight: 500 !important;
     }
     
-    /* Tags de Status */
+    .stTextInput input:focus, .stTextArea textarea:focus {
+        border-color: #3b82f6 !important;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+    }
+
+    /* BOTÕES ELITE */
+    .stButton > button {
+        border-radius: 12px;
+        height: 3.5rem;
+        font-weight: 700;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+    }
+    
+    /* Botão Primário (Avançar/Gerar) */
+    div[data-testid="stVerticalBlock"] > div > div > div > div > button[kind="primary"] {
+        background: #1e3a8a !important;
+        color: white !important;
+        border: none !important;
+        box-shadow: 0 10px 15px -3px rgba(30, 58, 138, 0.2);
+    }
+    
+    div[data-testid="stVerticalBlock"] > div > div > div > div > button[kind="primary"]:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 20px -5px rgba(30, 58, 138, 0.3);
+    }
+
+    /* PROGRESS BAR */
+    .stProgress > div > div > div > div {
+        background-image: linear-gradient(to right, #1e3a8a, #3b82f6);
+    }
+
+    /* TAGS */
     .status-tag {
         display: inline-block;
-        padding: 0.25rem 0.75rem;
-        border-radius: 9999px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        text-transform: uppercase;
-    }
-    .tag-tech { background-color: #dbeafe; color: #1e40af; }
-    .tag-eng { background-color: #fee2e2; color: #991b1b; }
-
-    /* Barra de Progresso Customizada */
-    .stProgress > div > div > div > div {
-        background-color: #3b82f6;
-    }
-    
-    /* Botões Refinados */
-    .stButton > button {
+        padding: 5px 15px;
         border-radius: 8px;
-        font-weight: 500;
-        border: none;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        transition: all 0.2s;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 10px;
     }
-    .primary-btn {
-        background-color: #1e3a8a !important;
-        color: white !important;
-    }
-    
-    /* Ajuste para Mobile */
-    @media (max-width: 768px) {
-        .premium-header {
-            flex-direction: column;
-            text-align: center;
-            gap: 1rem;
-        }
-        .header-logo {
-            display: none; /* Esconde logo no mobile para economizar espaço */
-        }
-    }
-    
-    /* Wizard Steps */
-    .step-indicator {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 2rem;
-        padding: 0 1rem;
-    }
-    .step {
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        background-color: #e2e8f0;
-        color: #64748b;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        position: relative;
-        z-index: 1;
-    }
-    .step.active {
-        background-color: #3b82f6;
-        color: white;
-        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
-    }
-    .step-line {
-        position: absolute;
-        top: 15px;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background-color: #e2e8f0;
-        z-index: 0;
+    .tag-tech { background-color: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+    .tag-eng { background-color: #fff1f2; color: #be123c; border: 1px solid #fecdd3; }
+
+    /* LABELS */
+    label {
+        font-weight: 700 !important;
+        color: #334155 !important;
+        font-size: 0.85rem !important;
+        margin-bottom: 8px !important;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# --- HEADER PREMIUM ---
-def render_header():
-    st.markdown("""
-    <div class="premium-header">
+# --- FUNÇÕES DE APOIO ---
+def get_image_base64(path):
+    if os.path.exists(path):
+        with open(path, "rb") as img_file:
+            return f"data:image/png;base64,{base64.b64encode(img_file.read()).decode()}"
+    return None
+
+# --- 4. HEADER PREMIUM COM LOGOS ---
+logo_pref_b64 = get_image_base64("logo_prefeitura.png") or get_image_base64("logo_prefeitura.jpg")
+logo_esc_b64 = get_image_base64("logo_escola.png") or get_image_base64("logo_escola.jpg")
+
+st.markdown(f"""
+<div class="premium-header">
+    <div style="display: flex; align-items: center; gap: 2rem;">
+        {f'<img src="{logo_pref_b64}" style="height:75px; background:white; padding:8px; border-radius:12px;">' if logo_pref_b64 else ''}
         <div class="header-text">
             <h1>Sistema Planejar</h1>
-            <p>Sistema interno - CEIEF Rafael Affonso Leite</p>
-        </div>
-        <div class="header-logo" style="font-size: 2.5rem;">
-            🏫
+            <p>Gestão Pedagógica • CEIEF Rafael Affonso Leite</p>
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    {f'<img src="{logo_esc_b64}" style="height:75px; background:white; padding:8px; border-radius:12px;">' if logo_esc_b64 else '<div style="font-size:3rem;">🏫</div>'}
+</div>
+""", unsafe_allow_html=True)
 
-# --- GERENCIAMENTO DE ESTADO ---
-if 'step' not in st.session_state:
-    st.session_state.step = 1
-if 'conteudos_selecionados' not in st.session_state:
-    st.session_state.conteudos_selecionados = []
-if 'config' not in st.session_state:
-    st.session_state.config = {}
+# --- FLUXO DE NAVEGAÇÃO ---
+progresso = {1: 33, 2: 66, 3: 100}
+st.progress(progresso[st.session_state.step])
+st.write("")
 
-# --- NAVEGAÇÃO ENTRE PASSOS ---
-def next_step():
-    st.session_state.step += 1
+# --- PASSO 1: CONFIGURAÇÃO ---
+if st.session_state.step == 1:
+    with st.sidebar:
+        st.markdown("### 🛠️ CONFIGURAÇÕES")
+        st.write("Defina os parâmetros iniciais do seu planejamento quinzinal ou mensal.")
 
-def prev_step():
-    st.session_state.step -= 1
+    st.markdown('<div class="card-container">', unsafe_allow_html=True)
+    st.markdown("### 📋 Identificação da Aula")
+    
+    c1, c2 = st.columns(2)
+    with c1:
+        professor = st.text_input("PROFESSOR(A) RESPONSÁVEL", value=st.session_state.config.get('professor', ''), placeholder="Nome Completo")
+        
+        anos = list(CURRICULO_DB.keys())
+        saved_ano = st.session_state.config.get('ano')
+        idx_ano = anos.index(saved_ano) if saved_ano in anos else 0
+        ano = st.selectbox("ANO DE ESCOLARIDADE", anos, index=idx_ano)
+        
+        # Turmas
+        qtd_turmas = {"Maternal II": 2, "Etapa I": 3, "Etapa II": 3, "1º Ano": 3, "2º Ano": 3, "3º Ano": 3, "4º Ano": 3, "5º Ano": 3}
+        max_t = qtd_turmas.get(ano, 3)
+        prefix = f"{ano} - Turma" if "Maternal" in ano or "Etapa" in ano else f"{ano} "
+        opts = [f"{prefix}{i}" for i in range(1, max_t + 1)]
+        
+        valid_defaults = [t for t in st.session_state.config.get('turmas', []) if t in opts]
+        turmas = st.multiselect("TURMAS VINCULADAS", opts, default=valid_defaults)
 
-# --- PASSO 1: CONFIGURAÇÃO INICIAL (WIZARD) ---
-def render_step1():
-    st.markdown("### 1️⃣ Configuração da Aula")
+    with c2:
+        meses = {2: "Fevereiro", 3: "Março", 4: "Abril", 5: "Maio", 6: "Junho", 7: "Julho", 8: "Agosto", 9: "Setembro", 10: "Outubro", 11: "Novembro", 12: "Dezembro"}
+        saved_mes = st.session_state.config.get('mes')
+        idx_mes = list(meses.values()).index(saved_mes) if saved_mes in list(meses.values()) else 0
+        mes_nome = st.selectbox("MÊS DE REFERÊNCIA", list(meses.values()), index=idx_mes)
+        mes_num = [k for k, v in meses.items() if v == mes_nome][0]
+        
+        if mes_num == 2:
+            periodo_texto = "01/02/2026 a 28/02/2026"
+            trimestre_doc = "1º Trimestre"
+            st.info("Planejamento Mensal (Fevereiro)")
+        else:
+            quinzena = st.radio("PERÍODO", ["1ª Quinzena (01-15)", "2ª Quinzena (16-Fim)"])
+            tri = "1º Trimestre" if mes_num <= 4 else "2º Trimestre" if mes_num <= 8 else "3º Trimestre"
+            ultimo = calendar.monthrange(2026, mes_num)[1]
+            periodo_texto = f"01/{mes_num:02d}/2026 a 15/{mes_num:02d}/2026" if "1ª" in quinzena else f"16/{mes_num:02d}/2026 a {ultimo}/{mes_num:02d}/2026"
+            trimestre_doc = tri
+    st.markdown('</div>', unsafe_allow_html=True)
+    
+    if st.button("Avançar para Matriz Curricular ➔", type="primary", use_container_width=True):
+        if not professor or not turmas:
+            st.error("ERRO: O preenchimento do docente e das turmas é obrigatório.")
+        else:
+            if st.session_state.config.get('ano') != ano: 
+                st.session_state.conteudos_selecionados = []
+            st.session_state.config = {'professor': professor, 'ano': ano, 'turmas': turmas, 'mes': mes_nome, 'periodo': periodo_texto, 'trimestre': trimestre_doc}
+            set_step(2); st.rerun()
+
+# --- PASSO 2: MATRIZ ---
+elif st.session_state.step == 2:
+    st.markdown(f"### 📖 Matriz Curricular: **{st.session_state.config['ano']}**")
     
     with st.container():
         st.markdown('<div class="card-container">', unsafe_allow_html=True)
-        
-        c1, c2 = st.columns(2)
-        with c1:
-            professor = st.text_input("Professor(a) Responsável", value=st.session_state.config.get('professor', ''))
-            
-            anos = list(CURRICULO_DB.keys())
-            nivel_idx = 0
-            if 'nivel' in st.session_state.config and st.session_state.config['nivel'] in anos:
-                nivel_idx = anos.index(st.session_state.config['nivel'])
-            
-            nivel = st.selectbox("Ano de Escolaridade", anos, index=nivel_idx)
-            
-            # Lógica de Turmas
-            qtd_turmas = {
-                "Maternal II": 2, "Etapa I": 3, "Etapa II": 3,
-                "1º Ano": 3, "2º Ano": 3, "3º Ano": 3, "4º Ano": 3, "5º Ano": 3
-            }
-            max_t = qtd_turmas.get(nivel, 3)
-            prefixo = f"{nivel} - Turma" if "Maternal" in nivel or "Etapa" in nivel else f"{nivel} "
-            opcoes_turmas = [f"{prefixo}{i}" for i in range(1, max_t + 1)]
-            
-            turmas = st.multiselect("Turmas (Espelhamento)", opcoes_turmas, default=st.session_state.config.get('turmas', []))
+        dados = CURRICULO_DB.get(st.session_state.config['ano'], {})
+        op_tec, op_ing = [], []
+        termos = ['ORALIDADE', 'LEITURA', 'ESCRITA', 'INGLÊS']
+        for k, v in dados.items():
+            if v:
+                eixo = v[0]['eixo'].upper()
+                if any(t in eixo for t in termos) or any(t in k.upper() for t in termos): op_ing.append(k)
+                else: op_tec.append(k)
 
-        with c2:
-            meses = {2: "Fevereiro", 3: "Março", 4: "Abril", 5: "Maio", 6: "Junho", 7: "Julho", 
-                     8: "Agosto", 9: "Setembro", 10: "Outubro", 11: "Novembro", 12: "Dezembro"}
-            
-            mes_nome = st.selectbox("Mês de Referência", list(meses.values()))
-            mes_num = [k for k, v in meses.items() if v == mes_nome][0]
-            ano_atual = datetime.now().year
-            
-            if mes_num == 2:
-                periodo_texto = f"01/02/{ano_atual} a 28/02/{ano_atual}"
-                trimestre_doc = "1º Trimestre"
-                st.info("ℹ️ Fevereiro: Planejamento Mensal")
-            else:
-                quinzena = st.radio("Período Quinzenal", ["1ª Quinzena (01-15)", "2ª Quinzena (16-Fim)"])
-                ultimo_dia = calendar.monthrange(ano_atual, mes_num)[1]
-                if mes_num <= 4: trimestre_doc = "1º Trimestre"
-                elif mes_num <= 8: trimestre_doc = "2º Trimestre"
-                else: trimestre_doc = "3º Trimestre"
+        t1, t2 = st.tabs(["💻 Tecnologia & Cultura Digital", "🇬🇧 Língua Inglesa"])
+        with t1:
+            if op_tec:
+                c1, c2 = st.columns(2)
+                g = c1.selectbox("EIXO CURRICULAR", op_tec, key="t_g")
+                e = c2.selectbox("HABILIDADE", [i['especifico'] for i in dados[g]], key="t_e")
+                sel = next(i for i in dados[g] if i['especifico'] == e)
+                st.markdown(f"<div style='background:#f1f5f9; padding:1.5rem; border-radius:12px; border:1px solid #cbd5e1; margin-top:10px;'><span class='status-tag tag-tech'>Objetivo de Aprendizagem</span><br><b>{sel['objetivo']}</b></div>", unsafe_allow_html=True)
+                if st.button("Adicionar à Lista ➕", key="bt_t"):
+                    st.session_state.conteudos_selecionados.append({'tipo': 'Tecnologia', 'eixo': sel['eixo'], 'geral': g, 'especifico': e, 'objetivo': sel['objetivo']})
+                    st.toast("Adicionado!")
+            else: st.warning("Sem dados.")
 
-                if "1ª" in quinzena:
-                    periodo_texto = f"01/{mes_num:02d}/{ano_atual} a 15/{mes_num:02d}/{ano_atual}"
-                else:
-                    periodo_texto = f"16/{mes_num:02d}/{ano_atual} a {ultimo_dia}/{mes_num:02d}/{ano_atual}"
-            
-            st.success(f"🗓️ **Período Selecionado:** {periodo_texto} ({trimestre_doc})")
-
+        with t2:
+            if op_ing:
+                c1, c2 = st.columns(2)
+                g = c1.selectbox("TÓPICO", op_ing, key="i_g")
+                e = c2.selectbox("PRÁTICA", [i['especifico'] for i in dados[g]], key="i_e")
+                sel = next(i for i in dados[g] if i['especifico'] == e)
+                st.markdown(f"<div style='background:#fef2f2; padding:1.5rem; border-radius:12px; border:1px solid #fecdd3; margin-top:10px;'><span class='status-tag tag-eng'>Objetivo de Aprendizagem</span><br><b>{sel['objetivo']}</b></div>", unsafe_allow_html=True)
+                if st.button("Adicionar à Lista ➕", key="bt_i"):
+                    st.session_state.conteudos_selecionados.append({'tipo': 'Inglês', 'eixo': sel['eixo'], 'geral': g, 'especifico': e, 'objetivo': sel['objetivo']})
+                    st.toast("Adicionado!")
         st.markdown('</div>', unsafe_allow_html=True)
-        
-        # Validação para avançar
-        if st.button("Próximo Passo ➡️", type="primary", use_container_width=True):
-            if not professor or not turmas:
-                st.toast("⚠️ Preencha o nome do professor e selecione as turmas.", icon="⚠️")
-            else:
-                # Salva no estado
-                st.session_state.config = {
-                    'professor': professor,
-                    'nivel': nivel,
-                    'turmas': turmas,
-                    'periodo': periodo_texto,
-                    'trimestre': trimestre_doc
-                }
-                # Limpa conteúdos se mudou o nível
-                if 'nivel_antigo' in st.session_state and st.session_state.nivel_antigo != nivel:
-                    st.session_state.conteudos_selecionados = []
-                st.session_state.nivel_antigo = nivel
-                
-                next_step()
-                st.rerun()
 
-# --- PASSO 2: SELEÇÃO DE CONTEÚDO (SHOPPING STYLE) ---
-def render_step2():
-    st.markdown(f"### 2️⃣ Seleção de Conteúdos ({st.session_state.config['nivel']})")
-    
-    # Lógica de Separação
-    dados_ano = CURRICULO_DB.get(st.session_state.config['nivel'], {})
-    opcoes_tec = []
-    opcoes_ing = []
-    termos_ing = ['ORALIDADE', 'LEITURA', 'ESCRITA', 'INGLÊS', 'LISTENING', 'READING', 'WRITING', 'VOCABULÁRIO', 'FAMILY', 'COLORS']
-
-    for chave, lista in dados_ano.items():
-        if lista:
-            eixo = lista[0].get('eixo', '').upper()
-            chave_upper = chave.upper()
-            if any(t in eixo for t in termos_ing) or any(t in chave_upper for t in termos_ing):
-                opcoes_ing.append(chave)
-            else:
-                opcoes_tec.append(chave)
-
-    # Abas Modernas
-    t1, t2 = st.tabs(["💻 Tecnologia & Cultura", "🇬🇧 Linguagens (Inglês)"])
-    
-    # --- ABA TECNOLOGIA ---
-    with t1:
-        if opcoes_tec:
-            col_l, col_r = st.columns([1, 1])
-            with col_l:
-                geral = st.selectbox("Eixo Temático", opcoes_tec, key="tec_g")
-            
-            itens = dados_ano[geral]
-            opcoes_esp = [i['especifico'] for i in itens]
-            with col_r:
-                especifico = st.selectbox("Habilidade", opcoes_esp, key="tec_e")
-            
-            item_sel = next(i for i in itens if i['especifico'] == especifico)
-            
-            # Card Preview
-            st.markdown(f"""
-            <div class="card-container" style="border-left: 5px solid #3b82f6;">
-                <span class="status-tag tag-tech">Tecnologia</span>
-                <h4>{item_sel['eixo']}</h4>
-                <p><strong>Objetivo:</strong> {item_sel['objetivo']}</p>
-                <small style="color:#64748b;">📅 {item_sel['trimestre']}</small>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            if st.button("Adicionar Tecnologia ➕", key="add_tec", type="secondary", use_container_width=True):
-                novo = {"tipo": "Tecnologia", "eixo": item_sel['eixo'], "geral": geral, "especifico": especifico, "objetivo": item_sel['objetivo']}
-                if novo not in st.session_state.conteudos_selecionados:
-                    st.session_state.conteudos_selecionados.append(novo)
-                    st.toast("Item adicionado!", icon="✅")
-                else:
-                    st.toast("Item já existe na lista.", icon="ℹ️")
-
-    # --- ABA INGLÊS ---
-    with t2:
-        if opcoes_ing:
-            col_l, col_r = st.columns([1, 1])
-            with col_l:
-                geral = st.selectbox("Tópico", opcoes_ing, key="ing_g")
-            
-            itens = dados_ano[geral]
-            opcoes_esp = [i['especifico'] for i in itens]
-            with col_r:
-                especifico = st.selectbox("Prática", opcoes_esp, key="ing_e")
-            
-            item_sel = next(i for i in itens if i['especifico'] == especifico)
-            
-            # Card Preview
-            st.markdown(f"""
-            <div class="card-container" style="border-left: 5px solid #ef4444;">
-                <span class="status-tag tag-eng">Inglês</span>
-                <h4>{item_sel['eixo']}</h4>
-                <p><strong>Objetivo:</strong> {item_sel['objetivo']}</p>
-                <small style="color:#64748b;">📅 {item_sel['trimestre']}</small>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            if st.button("Adicionar Inglês ➕", key="add_ing", type="secondary", use_container_width=True):
-                novo = {"tipo": "Inglês", "eixo": item_sel.get('eixo', 'Língua Inglesa'), "geral": geral, "especifico": especifico, "objetivo": item_sel['objetivo']}
-                if novo not in st.session_state.conteudos_selecionados:
-                    st.session_state.conteudos_selecionados.append(novo)
-                    st.toast("Item adicionado!", icon="✅")
-                else:
-                    st.toast("Item já existe na lista.", icon="ℹ️")
-
-    # --- LISTA DE ITENS SELECIONADOS (CARRINHO) ---
-    st.markdown("---")
-    st.markdown(f"##### 🛒 Itens Selecionados ({len(st.session_state.conteudos_selecionados)})")
-    
     if st.session_state.conteudos_selecionados:
-        for i, item in enumerate(st.session_state.conteudos_selecionados):
-            cor = "#dbeafe" if item['tipo'] == "Tecnologia" else "#fee2e2"
-            icone = "💻" if item['tipo'] == "Tecnologia" else "🇬🇧"
-            
-            c1, c2 = st.columns([0.85, 0.15])
-            with c1:
-                st.markdown(f"""
-                <div style="background-color: {cor}; padding: 10px; border-radius: 8px; margin-bottom: 5px; font-size: 0.9rem;">
-                    <strong>{icone} {item['geral']}</strong><br>{item['especifico']}
-                </div>
-                """, unsafe_allow_html=True)
-            with c2:
-                if st.button("🗑️", key=f"del_{i}"):
-                    st.session_state.conteudos_selecionados.pop(i)
-                    st.rerun()
-    else:
-        st.info("Nenhum item selecionado ainda.")
+        st.markdown("#### Conteúdos Selecionados")
+        for i, it in enumerate(st.session_state.conteudos_selecionados):
+            col_t, col_b = st.columns([0.95, 0.05])
+            with col_t: st.markdown(f"<div style='background:white; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:10px;'><b>[{it['tipo']}]</b> {it['geral']}: {it['especifico']}</div>", unsafe_allow_html=True)
+            with col_b: 
+                if st.button("✕", key=f"del_{i}"): st.session_state.conteudos_selecionados.pop(i); st.rerun()
 
-    # Navegação
-    c_back, c_next = st.columns(2)
-    with c_back:
-        if st.button("⬅️ Voltar"):
-            prev_step()
-            st.rerun()
-    with c_next:
-        if st.button("Avançar para Detalhes ➡️", type="primary"):
-            if not st.session_state.conteudos_selecionados:
-                st.error("Selecione pelo menos um conteúdo.")
-            else:
-                next_step()
-                st.rerun()
+    c1, c2 = st.columns(2)
+    if c1.button("⬅ Voltar"): set_step(1); st.rerun()
+    if c2.button("Avançar para Detalhes ➔", type="primary", use_container_width=True):
+        if not st.session_state.conteudos_selecionados: st.error("Seleccione ao menos um conteúdo.")
+        else: set_step(3); st.rerun()
 
-# --- PASSO 3: DETALHAMENTO E EXPORTAÇÃO ---
-def render_step3():
-    st.markdown("### 3️⃣ Detalhamento Pedagógico")
-    
+# --- PASSO 3: EMISSÃO ---
+elif st.session_state.step == 3:
+    st.markdown("### ✍️ Detalhamento Pedagógico")
     with st.container():
         st.markdown('<div class="card-container">', unsafe_allow_html=True)
+        st.markdown("<div style='color:#be123c; font-weight:800; font-size:0.75rem; margin-bottom:1rem;'>CAMPOS OBRIGATÓRIOS PARA EMISSÃO</div>", unsafe_allow_html=True)
+        
+        obj_esp = st.text_area("OBJETIVOS ESPECÍFICOS DA AULA", height=100, placeholder="Descreva os resultados práticos desejados...", value=st.session_state.config.get('obj_esp', ''))
         
         c1, c2 = st.columns(2)
-        situacao = c1.text_area("Situação Didática (Obrigatório)", height=150, placeholder="Descreva a metodologia...", value=st.session_state.config.get('situacao', ''))
-        recursos = c2.text_area("Recursos (Obrigatório)", height=150, placeholder="Materiais necessários...", value=st.session_state.config.get('recursos', ''))
+        with c1: sit = st.text_area("SITUAÇÃO DIDÁTICA / METODOLOGIA", height=200, placeholder="Passo a passo...", value=st.session_state.config.get('sit', ''))
+        with c2: rec = st.text_area("RECURSOS DIDÁTICOS", height=200, placeholder="Materiais...", value=st.session_state.config.get('rec', ''))
         
         c3, c4 = st.columns(2)
-        avaliacao = c3.text_area("Avaliação", height=100, value=st.session_state.config.get('avaliacao', ''))
-        recuperacao = c4.text_area("Recuperação Contínua (Obrigatório)", height=100, value=st.session_state.config.get('recuperacao', ''))
-        
+        with c3: aval = st.text_area("PROCEDIMENTOS DE AVALIAÇÃO", height=120, value=st.session_state.config.get('aval', ''))
+        with c4: recup = st.text_area("RECUPERAÇÃO CONTÍNUA", height=120, value=st.session_state.config.get('recup', ''))
         st.markdown('</div>', unsafe_allow_html=True)
 
-        # Salva textos no estado para não perder se voltar
-        st.session_state.config.update({
-            'situacao': situacao, 'recursos': recursos,
-            'avaliacao': avaliacao, 'recuperacao': recuperacao
-        })
+    st.session_state.config.update({'obj_esp': obj_esp, 'sit': sit, 'rec': rec, 'aval': aval, 'recup': recup})
 
-    # GERAÇÃO DO WORD
-    c_back, c_final = st.columns(2)
-    with c_back:
-        if st.button("⬅️ Voltar Seleção"):
-            prev_step()
-            st.rerun()
-            
-    with c_final:
-        if st.button("🚀 Gerar Documento Oficial", type="primary", use_container_width=True):
-            if not situacao or not recursos or not recuperacao:
-                st.error("Preencha os campos obrigatórios!")
-            else:
-                # Prepara dados finais
-                final_data = st.session_state.config
-                final_data['Turmas'] = ", ".join(final_data['turmas'])
-                
-                # Gera DOC
-                doc_buffer = gerar_docx_premium(st.session_state.conteudos_selecionados, final_data)
-                
-                st.balloons()
-                st.success("Documento gerado com sucesso!")
-                
-                filename = f"Plan_{final_data['nivel'].replace(' ','')}_{datetime.now().strftime('%d-%m')}.docx"
-                
-                st.download_button(
-                    label="📥 Baixar Arquivo Word (.docx)",
-                    data=doc_buffer,
-                    file_name=filename,
-                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                    use_container_width=True
-                )
+    # --- GERADORES ---
+    def clean(t): return t.encode('latin-1', 'replace').decode('latin-1') if t else ""
 
-# --- FUNÇÃO DE GERAÇÃO DO WORD (Mantida e otimizada) ---
-def gerar_docx_premium(conteudos, dados):
-    doc = Document()
-    
-    # Margens ABNT
-    for section in doc.sections:
-        section.top_margin = Cm(1.0)
-        section.bottom_margin = Cm(2.0)
-        section.left_margin = Cm(2.0)
-        section.right_margin = Cm(2.0)
+    def gerar_pdf(dados, conteudos):
+        pdf = FPDF(); pdf.add_page(); pdf.set_auto_page_break(auto=True, margin=15)
+        pdf.set_font('Arial', 'B', 14); pdf.cell(0, 10, 'CEIEF RAFAEL AFFONSO LEITE', 0, 1, 'C')
+        pdf.set_font('Arial', '', 10); pdf.cell(0, 5, 'Planejamento Pedagógico Digital', 0, 1, 'C'); pdf.ln(10)
+        pdf.set_fill_color(245, 247, 250); pdf.set_font("Arial", 'B', 9)
+        pdf.cell(0, 7, clean(f"DOCENTE: {dados['professor']} | ANO: {dados['ano']} | TURMAS: {', '.join(dados['turmas'])}"), 1, 1, 'L', True)
+        pdf.ln(5); pdf.set_font("Arial", 'B', 10); pdf.cell(0, 8, clean("MATRIZ CURRICULAR"), 0, 1)
+        pdf.set_font("Arial", '', 9)
+        for it in conteudos: pdf.multi_cell(0, 5, clean(f"[{it['tipo']}] {it['geral']}: {it['especifico']}"), 1, 'L')
+        pdf.ln(5); pdf.set_font("Arial", 'B', 10); pdf.cell(0, 8, clean("DETALHAMENTO PEDAGÓGICO"), 0, 1)
+        for l, v in [("Objetivos", dados['obj_esp']), ("Metodologia", dados['sit']), ("Recursos", dados['rec']), ("Avaliação", dados['aval']), ("Recuperação", dados['recup'])]:
+            pdf.set_font("Arial", 'B', 9); pdf.cell(0, 5, clean(l + ":"), 0, 1); pdf.set_font("Arial", '', 9); pdf.multi_cell(0, 5, clean(v)); pdf.ln(2)
+        pdf.set_y(-20); pdf.set_font('Arial', 'I', 8); pdf.cell(0, 10, f'Gerado em: {datetime.now().strftime("%d/%m/%Y %H:%M")} | Sistema Planejar', 0, 0, 'C')
+        return pdf.output(dest='S').encode('latin-1')
 
-    style = doc.styles['Normal']
-    font = style.font
-    font.name = 'Arial'
-    font.size = Pt(11)
+    def gerar_docx(dados, conteudos):
+        doc = Document(); style = doc.styles['Normal']; font = style.font; font.name = 'Arial'; font.size = Pt(10)
+        p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p.add_run("CEIEF RAFAEL AFFONSO LEITE\nPlanejamento de Linguagens e Tecnologias").bold = True
+        doc.add_paragraph(f"Docente: {dados['professor']}\nAno: {dados['ano']} | Turmas: {', '.join(dados['turmas'])}\nPeríodo: {dados['periodo']}")
+        doc.add_heading("Matriz Curricular", 2)
+        for it in conteudos: doc.add_paragraph(f"• {it['geral']}: {it['especifico']}", style='List Bullet')
+        doc.add_heading("Detalhamento Pedagógico", 2)
+        for l, v in [("Obj. Específicos", dados['obj_esp']), ("Situação", dados['sit']), ("Recursos", dados['rec']), ("Avaliação", dados['aval']), ("Recuperação", dados['recup'])]:
+            p = doc.add_paragraph(); p.add_run(l + ": ").bold = True; p.add_run(v)
+        f = BytesIO(); doc.save(f); f.seek(0); return f
 
-    # Cabeçalho com Imagens
-    table_head = doc.add_table(rows=1, cols=3)
-    table_head.autofit = False
-    
-    # Carrega imagens locais
-    logo_pref = "logo_prefeitura.png" if os.path.exists("logo_prefeitura.png") else "logo_prefeitura.jpg"
-    logo_esc = "logo_escola.png" if os.path.exists("logo_escola.png") else "logo_escola.jpg"
+    c1, c2 = st.columns(2)
+    if c1.button("⬅ Matriz"): set_step(2); st.rerun()
+    if c2.button("GERAR PLANEJAMENTO FINAL 🚀", type="primary", use_container_width=True):
+        if not all([obj_esp, sit, rec, aval, recup]): 
+            st.error("Erro: Preencha todos os campos do detalhamento pedagógico.")
+        else:
+            f_data = st.session_state.config
+            w_file = gerar_docx(f_data, st.session_state.conteudos_selecionados)
+            p_file = gerar_pdf(f_data, st.session_state.conteudos_selecionados)
+            nome_arq = f"Planeamento_{f_data['ano'].replace(' ','')}_{datetime.now().strftime('%d%m')}"
+            st.success("✅ Documentação gerada!"); st.balloons()
+            cd1, cd2 = st.columns(2)
+            cd1.download_button("📄 Baixar WORD", w_file, f"{nome_arq}.docx", use_container_width=True)
+            cd2.download_button("📕 Baixar PDF", p_file, f"{nome_arq}.pdf", use_container_width=True)
 
-    # Célula Esq
-    c1 = table_head.cell(0,0); c1.width = Cm(2.5)
-    if os.path.exists(logo_pref):
-        try: c1.paragraphs[0].add_run().add_picture(logo_pref, width=Cm(2.0))
-        except: pass
-        
-    # Célula Centro
-    c2 = table_head.cell(0,1); c2.width = Cm(11.0)
-    p = c2.paragraphs[0]
-    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p.add_run("PREFEITURA MUNICIPAL DE LIMEIRA\n").bold = True
-    p.add_run("CEIEF RAFAEL AFFONSO LEITE\n").bold = True
-    p.add_run("Planejamento de Linguagens e Tecnologias")
-    
-    # Célula Dir
-    c3 = table_head.cell(0,2); c3.width = Cm(2.5)
-    p_dir = c3.paragraphs[0]
-    p_dir.alignment = WD_ALIGN_PARAGRAPH.RIGHT
-    if os.path.exists(logo_esc):
-        try: p_dir.add_run().add_picture(logo_esc, width=Cm(2.0))
-        except: pass
-
-    doc.add_paragraph() # Espaço
-
-    # Dados de Identificação
-    p_info = doc.add_paragraph()
-    p_info.add_run(f"Período: {dados['periodo']}\n").bold = True
-    p_info.add_run(f"Professor(a): {dados['professor']}\n")
-    p_info.add_run(f"Ano: {dados['nivel']} | Turmas: {dados['Turmas']} | {dados['trimestre']}")
-    
-    doc.add_paragraph("-" * 80)
-
-    # Tabela Conteúdos
-    if conteudos:
-        doc.add_heading("Objetivos e Conteúdos", level=3)
-        t = doc.add_table(rows=1, cols=3)
-        t.style = 'Table Grid'
-        hdr = t.rows[0].cells
-        hdr[0].text = "Eixo / Geral"; hdr[1].text = "Conteúdo Específico"; hdr[2].text = "Objetivo"
-        
-        for cell in hdr:
-            cell.paragraphs[0].runs[0].bold = True
-            
-        for item in conteudos:
-            row = t.add_row().cells
-            row[0].text = f"{item['eixo']}\n({item['geral']})"
-            row[1].text = item['especifico']
-            row[2].text = item['objetivo']
-
-    doc.add_paragraph()
-    doc.add_heading("Desenvolvimento", level=3)
-    
-    p = doc.add_paragraph()
-    p.add_run("Situação Didática:\n").bold = True
-    p.add_run(dados['situacao'])
-    
-    p = doc.add_paragraph()
-    p.add_run("\nRecursos Didáticos:\n").bold = True
-    p.add_run(dados['recursos'])
-    
-    p = doc.add_paragraph()
-    p.add_run("\nAvaliação:\n").bold = True
-    p.add_run(dados['avaliacao'])
-    
-    p = doc.add_paragraph()
-    p.add_run("\nRecuperação Contínua:\n").bold = True
-    p.add_run(dados['recuperacao'])
-
-    f = BytesIO()
-    doc.save(f)
-    f.seek(0)
-    return f
-
-# --- FLUXO PRINCIPAL ---
-render_header()
-
-# Barra de Progresso Visual
-progress_map = {1: 33, 2: 66, 3: 100}
-st.progress(progress_map[st.session_state.step])
-
-# Renderiza o passo atual
-if st.session_state.step == 1:
-    render_step1()
-elif st.session_state.step == 2:
-    render_step2()
-elif st.session_state.step == 3:
-    render_step3()
-
-# Rodapé Premium
-st.markdown("""
-    <div style='margin-top: 50px; text-align: center; color: #94a3b8; font-size: 0.8rem; border-top: 1px solid #e2e8f0; padding-top: 20px;'>
-        <b>Sistema Planejar</b> • © 2025 José Victor Souza Gallo
+# --- RODAPÉ ---
+st.markdown(f"""
+    <div style="text-align:center; margin-top:60px; padding:30px; color:#94a3b8; font-size:0.8rem; border-top:1px solid #e2e8f0;">
+        <b>SISTEMA PLANEJAR ELITE</b><br>
+        Desenvolvido por José Victor Souza Gallo • CEIEF Rafael Affonso Leite © {datetime.now().year}
     </div>
 """, unsafe_allow_html=True)
