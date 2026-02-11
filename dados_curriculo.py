@@ -1,4 +1,3 @@
-```python
 # ARQUIVO: dados_curriculo.py
 # Baseado INTEGRALMENTE nas tabelas oficiais do Currículo Fundamental e Infantil Linguagens e Tecnologias (2025)
 
@@ -173,7 +172,8 @@ CURRICULO_DB = {
     # ==============================================================================
     # EDUCAÇÃO INFANTIL - ETAPA I
     # ==============================================================================
-    "Etapa I": {
+  
+        "Etapa I": {
         "CULTURA DIGITAL": [
             {
                 "eixo": "CULTURA DIGITAL",
@@ -344,6 +344,7 @@ CURRICULO_DB = {
             }
         ]
     },
+
     # ==============================================================================
     # EDUCAÇÃO INFANTIL - ETAPA II
     # ==============================================================================
@@ -567,7 +568,8 @@ CURRICULO_DB = {
             {"eixo": "CIÊNCIAS HUMANAS", "geral": "Temporalidade", "especifico": "Rotina diária, sequência das ações e organização do tempo escolar.", "objetivo": "Observar a sequência das ações na rotina e compreender o tempo vivido (MI-1).", "trimestre": "Contínuo"},
             {"eixo": "CIÊNCIAS HUMANAS", "geral": "Fatos Históricos", "especifico": "Tradições culturais, hinos (Nacional/Municipal) e símbolos pátrios.", "objetivo": "Participar de práticas culturais e observar bandeiras e cores (MI-1).", "trimestre": "Contínuo"}
         ]
-    },
+    },   
+        
     # ==============================================================================
     # 1º ANO
     # ==============================================================================
@@ -979,6 +981,7 @@ CURRICULO_DB = {
             }
         ]
     },
+
     # ==============================================================================
     # 2º ANO
     # ==============================================================================
@@ -1523,6 +1526,7 @@ CURRICULO_DB = {
             }
         ]
     },
+
     # ==============================================================================
     # 3º ANO
     # ==============================================================================
@@ -2095,8 +2099,9 @@ CURRICULO_DB = {
             }
         ]
     },
+
     # ==============================================================================
-    # 4º ANO
+    # 4º ANO (NOVO! - Adicionado conforme tabela oficial)
     # ==============================================================================
     "4º Ano": {
         "CULTURA DIGITAL: LETRAMENTO E CIDADANIA": [
@@ -2597,8 +2602,9 @@ CURRICULO_DB = {
             }
         ]
     },
+
     # ==============================================================================
-    # 5º ANO
+    # 5º ANO (NOVO! - Adicionado conforme tabela oficial)
     # ==============================================================================
     "5º Ano": {
         "CULTURA DIGITAL: LETRAMENTO E CIDADANIA": [
@@ -3338,3 +3344,7 @@ CURRICULO_DB = {
         ]
     }
 }
+
+
+
+
