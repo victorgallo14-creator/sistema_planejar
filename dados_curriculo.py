@@ -1,13 +1,3 @@
-Com certeza! Analisei o arquivo `dados_curriculo.py` e identifiquei alguns erros de sintaxe que impediriam seu funcionamento em um programa Python.
-
-O problema principal era a **falta de vírgulas** ao final da definição de alguns anos/etapas, o que é necessário para separar os elementos de um dicionário.
-
-Abaixo está o código completo com as devidas correções.
-
-```python
-# ARQUIVO: dados_curriculo.py
-# Baseado INTEGRALMENTE nas tabelas oficiais do Currículo Fundamental e Infantil Linguagens e Tecnologias (2025)
-
 CURRICULO_DB = {
     # ==============================================================================
     # EDUCAÇÃO INFANTIL - MATERNAL II
@@ -3351,3 +3341,4 @@ CURRICULO_DB = {
     }
 }
 ```
+
