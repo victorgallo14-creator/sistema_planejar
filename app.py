@@ -7,6 +7,7 @@ from io import BytesIO
 import calendar
 from datetime import datetime
 import os
+import base64
 
 # IMPORTAÇÃO DO CURRÍCULO
 try:
@@ -303,7 +304,7 @@ elif st.session_state.step == 2:
     c_b1, c_b2 = st.columns(2)
     if c_b1.button("⬅️ Voltar"): set_step(1); st.rerun()
     if c_b2.button("Avançar para Detalhes ➡️", type="primary"):
-        if not st.session_state.conteudos_selecionados: st.error("Selecione ao menos um item.")
+        if not st.session_state.conteudos_selecionados: st.error("Selecione ao menos um item da matriz.")
         else: set_step(3); st.rerun()
 
 # --- PASSO 3: DETALHAMENTO E EMISSÃO ---
@@ -313,11 +314,11 @@ elif st.session_state.step == 3:
     with st.container():
         st.markdown('<div class="card-container">', unsafe_allow_html=True)
         
-        # CAMPO NOVO
+        # CAMPO OBRIGATÓRIO (ALTERADO)
         objetivos_especificos = st.text_area(
-            "Objetivos Específicos da Aula (Opcional)", 
-            height=80, 
-            placeholder="Descreva objetivos pontuais desta aula...",
+            "Objetivos Específicos da Aula (Obrigatório)", 
+            height=100, 
+            placeholder="Descreva os objetivos pontuais desta aula (além dos previstos no currículo)...",
             value=st.session_state.config.get('objetivos_especificos', '')
         )
         
@@ -370,7 +371,7 @@ elif st.session_state.step == 3:
         pdf.set_font("Arial", '', 9)
         for item in conteudos:
             pdf.set_font("Arial", 'B', 8)
-            pdf.cell(0, 5, clean(f"EIXO: {item['eixo']} | {item['geral']}"), 0, 1)
+            pdf.cell(0, 5, clean(f"EIXO: {item['eixo']} | TEMA: {item['geral']}"), 0, 1)
             pdf.set_font("Arial", '', 8)
             pdf.multi_cell(0, 5, clean(f"Habilidade: {item['especifico']}"), 0, 'L')
             pdf.multi_cell(0, 5, clean(f"Objetivo: {item['objetivo']}"), 0, 'L')
@@ -379,9 +380,9 @@ elif st.session_state.step == 3:
         pdf.ln(3)
         pdf.set_font("Arial", 'B', 10); pdf.cell(0, 8, clean("DETALHAMENTO PEDAGÓGICO"), 0, 1)
         
-        if dados['objetivos_especificos']:
-            pdf.set_font("Arial", 'B', 9); pdf.cell(0, 5, clean("Objetivos Específicos:"), 0, 1)
-            pdf.set_font("Arial", '', 9); pdf.multi_cell(0, 5, clean(dados['objetivos_especificos'])); pdf.ln(3)
+        # Agora é obrigatório e sempre aparece
+        pdf.set_font("Arial", 'B', 9); pdf.cell(0, 5, clean("Objetivos Específicos:"), 0, 1)
+        pdf.set_font("Arial", '', 9); pdf.multi_cell(0, 5, clean(dados['objetivos_especificos'])); pdf.ln(3)
 
         pdf.set_font("Arial", 'B', 9); pdf.cell(0, 5, clean("Situação Didática:"), 0, 1)
         pdf.set_font("Arial", '', 9); pdf.multi_cell(0, 5, clean(dados['situacao'])); pdf.ln(3)
@@ -435,7 +436,7 @@ elif st.session_state.step == 3:
         if conteudos:
             doc.add_heading("Matriz Curricular", 3)
             tb = doc.add_table(rows=1, cols=3); tb.style = 'Table Grid'
-            tb.rows[0].cells[0].text = "Eixo"; tb.rows[0].cells[1].text = "Conteúdo"; tb.rows[0].cells[2].text = "Objetivo"
+            tb.rows[0].cells[0].text = "Eixo"; tb.rows[0].cells[1].text = "Conteúdo Específico"; tb.rows[0].cells[2].text = "Objetivo Curricular"
             for item in conteudos:
                 r = tb.add_row().cells
                 r[0].text = f"{item['eixo']}\n({item['geral']})"
@@ -444,8 +445,8 @@ elif st.session_state.step == 3:
 
         doc.add_paragraph(); doc.add_heading("Detalhamento Pedagógico", 3)
         
-        if dados['objetivos_especificos']:
-            p = doc.add_paragraph(); p.add_run("Objetivos Específicos:\n").bold = True; p.add_run(dados['objetivos_especificos'])
+        # Campo Novo no Word
+        p = doc.add_paragraph(); p.add_run("Objetivos Específicos:\n").bold = True; p.add_run(dados['objetivos_especificos'])
             
         p = doc.add_paragraph(); p.add_run("Situação Didática:\n").bold = True; p.add_run(dados['situacao'])
         p = doc.add_paragraph(); p.add_run("\nRecursos:\n").bold = True; p.add_run(dados['recursos'])
@@ -459,8 +460,9 @@ elif st.session_state.step == 3:
     c_b1, c_b2 = st.columns(2)
     if c_b1.button("⬅️ Voltar"): set_step(2); st.rerun()
     if c_b2.button("Emitir Documentos (Word + PDF)", type="primary"):
-        if not situacao or not recursos or not recuperacao:
-            st.error("Preencha os campos obrigatórios.")
+        # Validação Atualizada
+        if not situacao or not recursos or not recuperacao or not objetivos_especificos:
+            st.error("Preencha todos os campos obrigatórios, incluindo os Objetivos Específicos.")
         else:
             f_data = st.session_state.config
             word_file = gerar_docx(f_data, st.session_state.conteudos_selecionados)
