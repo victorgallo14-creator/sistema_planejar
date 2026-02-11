@@ -35,7 +35,7 @@ if 'config' not in st.session_state:
 def set_step(s): 
     st.session_state.step = s
 
-# --- 3. ESTILIZAÇÃO CSS (PREMIUM UI - SEM MENU LATERAL) ---
+# --- 3. ESTILIZAÇÃO CSS (PREMIUM UI - LOGOS EXTERNOS) ---
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
@@ -49,67 +49,62 @@ st.markdown("""
         background-color: #f8fafc;
     }
 
-    /* REMOVER MENU LATERAL E BOTÃO DE TOGGLE */
+    /* REMOVER MENU LATERAL */
     [data-testid="stSidebar"], [data-testid="stSidebarNav"] {
         display: none !important;
     }
     .st-emotion-cache-16ids0d {
         display: none !important;
     }
-    /* Expandir conteúdo para o centro */
+    
+    /* Centralizar conteúdo */
     .block-container {
         padding-top: 2rem !important;
-        max-width: 1000px !important;
+        max-width: 1100px !important;
     }
 
-    /* HEADER PREMIUM INTEGRADO */
-    .premium-header-full {
+    /* QUADRANTES DOS LOGOS (LADO DE FORA) */
+    .logo-quadrant {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        padding: 15px;
+        border-radius: 20px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        height: 100%;
+    }
+
+    /* CAIXA AZUL DE TÍTULO (SEM LOGOS INTERNOS) */
+    .premium-header-box {
         background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-        padding: 2.5rem;
+        padding: 2.2rem;
         border-radius: 20px;
         box-shadow: 0 10px 25px -5px rgba(30, 58, 138, 0.3);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 2.5rem;
-        border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .header-logo-container {
-        flex: 1;
-        display: flex;
-        align-items: center;
-    }
-    
-    .header-center-content {
-        flex: 3;
         text-align: center;
+        border: 1px solid rgba(255,255,255,0.1);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
 
     .header-text-main {
         margin: 0;
         font-weight: 800;
-        font-size: 2.8rem !important;
+        font-size: 2.6rem !important;
         color: white !important;
         letter-spacing: -1.5px;
         line-height: 1;
         text-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     .header-text-sub {
-        margin: 8px 0 0 0;
-        font-weight: 300;
-        color: rgba(255,255,255,0.85);
-        font-size: 1.1rem;
+        margin: 10px 0 0 0;
+        font-weight: 400;
+        color: rgba(255,255,255,0.9);
+        font-size: 1rem;
         text-transform: uppercase;
         letter-spacing: 1px;
-    }
-
-    .logo-img-header {
-        height: 85px;
-        background: white;
-        padding: 10px;
-        border-radius: 14px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
 
     /* CARDS E INPUTS */
@@ -128,7 +123,6 @@ st.markdown("""
         background-color: #ffffff !important;
         color: #0f172a !important;
         font-weight: 500 !important;
-        padding: 12px !important;
     }
     
     .stTextInput input:focus, .stTextArea textarea:focus {
@@ -184,37 +178,42 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- FUNÇÕES DE APOIO ---
-def get_image_base64(path):
-    if os.path.exists(path):
-        with open(path, "rb") as img_file:
-            return f"data:image/png;base64,{base64.b64encode(img_file.read()).decode()}"
-    return None
-
 def get_brazil_time():
-    # Ajuste manual para UTC-3 (Horário de Brasília)
     fuso_horario = timezone(timedelta(hours=-3))
     return datetime.now(fuso_horario)
 
-# --- 4. RENDERIZAÇÃO DO CABEÇALHO INTEGRADO ---
-logo_p_b64 = get_image_base64("logo_prefeitura.png") or get_image_base64("logo_prefeitura.jpg")
-logo_e_b64 = get_image_base64("logo_escola.png") or get_image_base64("logo_escola.jpg")
+# --- 4. RENDERIZAÇÃO DO CABEÇALHO COM LOGOS EXTERNOS ---
+# Criamos uma estrutura de colunas onde os logos ficam nos "quadrantes" laterais fora da caixa azul
+col_logo_pref, col_main_title, col_logo_esc = st.columns([1.5, 6, 1.5], vertical_alignment="center")
 
-st.markdown(f"""
-<div class="premium-header-full">
-    <div class="header-logo-container">
-        {f'<img src="{logo_p_b64}" class="logo-img-header">' if logo_p_b64 else '<div style="width:85px;"></div>'}
-    </div>
-    <div class="header-center-content">
+with col_logo_pref:
+    st.markdown('<div class="logo-quadrant">', unsafe_allow_html=True)
+    logo_p = "logo_prefeitura.png" if os.path.exists("logo_prefeitura.png") else "logo_prefeitura.jpg"
+    if os.path.exists(logo_p):
+        st.image(logo_p, use_container_width=True)
+    else:
+        st.markdown('<div style="font-size:2.5rem; opacity:0.2;">🏛️</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+with col_main_title:
+    st.markdown(f"""
+    <div class="premium-header-box">
         <h1 class="header-text-main">Sistema Planejar</h1>
         <p class="header-text-sub">Gestão Pedagógica Digital • CEIEF Rafael Affonso Leite</p>
     </div>
-    <div class="header-logo-container" style="justify-content: flex-end;">
-        {f'<img src="{logo_e_b64}" class="logo-img-header">' if logo_e_b64 else '<div style="font-size:3.5rem;">🏫</div>'}
-    </div>
-</div>
-""", unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
+
+with col_logo_esc:
+    st.markdown('<div class="logo-quadrant">', unsafe_allow_html=True)
+    logo_e = "logo_escola.png" if os.path.exists("logo_escola.png") else "logo_escola.jpg"
+    if os.path.exists(logo_e):
+        st.image(logo_e, use_container_width=True)
+    else:
+        st.markdown('<div style="font-size:2.5rem; text-align:center;">🏫</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # --- FLUXO DE NAVEGAÇÃO ---
+st.write("")
 progresso = {1: 33, 2: 66, 3: 100}
 st.progress(progresso[st.session_state.step])
 st.write("")
@@ -368,7 +367,6 @@ elif st.session_state.step == 3:
         for l, v in [("Objetivos", dados['obj_esp']), ("Metodologia", dados['sit']), ("Recursos", dados['rec']), ("Avaliação", dados['aval']), ("Recuperação", dados['recup'])]:
             pdf.set_font("Arial", 'B', 9); pdf.cell(0, 5, clean(l + ":"), 0, 1); pdf.set_font("Arial", '', 9); pdf.multi_cell(0, 5, clean(v)); pdf.ln(2)
         
-        # Carimbo com horário do Brasil
         horario_br = get_brazil_time().strftime("%d/%m/%Y %H:%M:%S")
         pdf.set_y(-20); pdf.set_font('Arial', 'I', 8)
         pdf.cell(0, 10, f'Emitido pelo Sistema Planejar (Brasil/GMT-3) em: {horario_br}', 0, 0, 'C')
@@ -410,7 +408,7 @@ elif st.session_state.step == 3:
 # --- RODAPÉ ---
 st.markdown(f"""
     <div style="text-align:center; margin-top:80px; padding:40px; color:#94a3b8; font-size:0.85rem; border-top:1px solid #e2e8f0;">
-        <b>SISTEMA PLANEJAR ELITE V7.1</b><br>
+        <b>SISTEMA PLANEJAR ELITE V7.2</b><br>
         Desenvolvido por José Victor Souza Gallo • CEIEF Rafael Affonso Leite © {datetime.now().year}
     </div>
 """, unsafe_allow_html=True)
