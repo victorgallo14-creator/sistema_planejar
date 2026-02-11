@@ -18,7 +18,7 @@ except ModuleNotFoundError:
 
 # --- 1. CONFIGURAÇÃO DE ALTA PERFORMANCE ---
 st.set_page_config(
-    page_title="Sistema Planejar | CEIEF",
+    page_title="Sistema Planejar | CEIEF Rafael Affonso Leite",
     layout="wide",
     page_icon="🎓",
     initial_sidebar_state="collapsed"
@@ -450,3 +450,4 @@ st.markdown(f"""
         Desenvolvido por José Victor Souza Gallo • CEIEF Rafael Affonso Leite © {datetime.now().year}
     </div>
 """, unsafe_allow_html=True)
+
