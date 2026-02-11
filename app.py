@@ -58,26 +58,25 @@ st.markdown("""
         color: #f1f5f9 !important;
     }
 
-    /* HEADER PREMIUM (O QUE VOCÊ GOSTOU) */
-    .premium-header {
+    /* CONTAINER DO HEADER PREMIUM */
+    .premium-header-container {
         background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-        padding: 2.5rem;
+        padding: 2rem;
         border-radius: 20px;
         color: white;
         margin-bottom: 2rem;
         box-shadow: 0 10px 25px -5px rgba(30, 58, 138, 0.3);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
     }
-    .header-text h1 {
+
+    .header-text-main {
         margin: 0;
         font-weight: 800;
         font-size: 2.5rem;
         color: white;
         letter-spacing: -1px;
+        line-height: 1.1;
     }
-    .header-text p {
+    .header-text-sub {
         margin: 5px 0 0 0;
         font-weight: 300;
         opacity: 0.9;
@@ -160,29 +159,38 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- FUNÇÕES DE APOIO ---
-def get_image_base64(path):
-    if os.path.exists(path):
-        with open(path, "rb") as img_file:
-            return f"data:image/png;base64,{base64.b64encode(img_file.read()).decode()}"
-    return None
+# --- 4. HEADER PREMIUM (REVISADO PARA FUNCIONAR COM IMAGENS REAIS) ---
+with st.container():
+    # Este bloco simula o fundo degradê enquanto usa colunas Streamlit para as imagens
+    st.markdown('<div class="premium-header-container">', unsafe_allow_html=True)
+    
+    col_l, col_c, col_r = st.columns([1, 4, 1])
+    
+    with col_l:
+        # Tenta carregar o logo da prefeitura
+        logo_p = "logo_prefeitura.png" if os.path.exists("logo_prefeitura.png") else "logo_prefeitura.jpg"
+        if os.path.exists(logo_p):
+            st.image(logo_p, width=90)
+        else:
+            st.markdown('<div style="height:90px;"></div>', unsafe_allow_html=True)
 
-# --- 4. HEADER PREMIUM COM LOGOS ---
-logo_pref_b64 = get_image_base64("logo_prefeitura.png") or get_image_base64("logo_prefeitura.jpg")
-logo_esc_b64 = get_image_base64("logo_escola.png") or get_image_base64("logo_escola.jpg")
+    with col_c:
+        st.markdown("""
+            <div style="text-align: center;">
+                <h1 class="header-text-main">Sistema Planejar</h1>
+                <p class="header-text-sub">Gestão Pedagógica • CEIEF Rafael Affonso Leite</p>
+            </div>
+        """, unsafe_allow_html=True)
 
-st.markdown(f"""
-<div class="premium-header">
-    <div style="display: flex; align-items: center; gap: 2rem;">
-        {f'<img src="{logo_pref_b64}" style="height:75px; background:white; padding:8px; border-radius:12px;">' if logo_pref_b64 else ''}
-        <div class="header-text">
-            <h1>Sistema Planejar</h1>
-            <p>Gestão Pedagógica • CEIEF Rafael Affonso Leite</p>
-        </div>
-    </div>
-    {f'<img src="{logo_esc_b64}" style="height:75px; background:white; padding:8px; border-radius:12px;">' if logo_esc_b64 else '<div style="font-size:3rem;">🏫</div>'}
-</div>
-""", unsafe_allow_html=True)
+    with col_r:
+        # Tenta carregar o logo da escola
+        logo_e = "logo_escola.png" if os.path.exists("logo_escola.png") else "logo_escola.jpg"
+        if os.path.exists(logo_e):
+            st.image(logo_e, width=90)
+        else:
+            st.markdown('<div style="font-size:3rem; text-align:right;">🏫</div>', unsafe_allow_html=True)
+            
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # --- FLUXO DE NAVEGAÇÃO ---
 progresso = {1: 33, 2: 66, 3: 100}
