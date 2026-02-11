@@ -53,6 +53,9 @@ st.markdown("""
     [data-testid="stSidebar"], [data-testid="stSidebarNav"] {
         display: none !important;
     }
+    .st-emotion-cache-16ids0d {
+        display: none !important;
+    }
     
     /* Centralizar conteúdo principal */
     .block-container {
@@ -112,8 +115,8 @@ st.markdown("""
             padding: 15px; 
             margin-top: 10px; 
         }
-        .logo-img-mobile {
-            max-width: 100px !important;
+        .pencil-logo-mobile {
+            font-size: 2rem !important;
         }
     }
 
@@ -193,14 +196,12 @@ with col_main_title:
     """, unsafe_allow_html=True)
 
 with col_logo_esc:
-    st.markdown('<div class="logo-quadrant">', unsafe_allow_html=True)
-    logo_e = "logo_escola.png" if os.path.exists("logo_escola.png") else "logo_escola.jpg"
-    if os.path.exists(logo_e):
-        # Aplicamos uma classe CSS para controle refinado do tamanho no mobile
-        st.image(logo_e, use_container_width=True)
-    else:
-        st.markdown('<div style="font-size:2.5rem; text-align:center;">🏫</div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    # Quadrante branco externo com o emoji de lápis
+    st.markdown("""
+    <div class="logo-quadrant">
+        <div class="pencil-logo-mobile" style="font-size: 3.5rem; text-align: center;">✏️</div>
+    </div>
+    """, unsafe_allow_html=True)
 
 # --- FLUXO DE NAVEGAÇÃO ---
 st.write("")
