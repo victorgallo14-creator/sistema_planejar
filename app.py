@@ -66,7 +66,7 @@ st.markdown("""
     
     /* 3. AJUSTE DE ESPAÇO NO TOPO (AS DUAS LINHAS QUE VOCÊ PEDIU) */
     .block-container {
-        padding-top: 5rem !important; 
+        padding-top: 2rem !important; 
         max-width: 1100px !important;
     }
 
@@ -422,6 +422,7 @@ st.markdown(f"""
         Desenvolvido por José Victor Souza Gallo • CEIEF Rafael Affonso Leite © {datetime.now().year}
     </div>
 """, unsafe_allow_html=True)
+
 
 
 
