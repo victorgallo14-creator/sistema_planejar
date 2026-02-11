@@ -143,7 +143,7 @@ st.markdown(f"""
             display: flex; align-items: center; justify-content: space-between;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);">
     <div style="display: flex; align-items: center; gap: 1.5rem;">
-        {f'<img src="{logo_pref_b64}" style="height:65px; background:white; padding:5px; border-radius:8px;">' if logo_pref_b64 else '<div style="font-size:2rem;">🏛️</div>'}
+        {f'<img src="{logo_pref_b64}" style="height:65px; background:white; padding:5px; border-radius:8px;">' if logo_pref_b64 else '<div style="font-size:2rem;"> </div>'}
         <div style="text-align: left;">
             <h1 style="margin:0; font-size: 1.8rem; font-weight: 800; color: white; line-height:1;">SISTEMA PLANEJAR</h1>
             <p style="margin:5px 0 0 0; font-size: 0.95rem; opacity: 0.85; font-weight: 400;">CEIEF Rafael Affonso Leite • Gestão Pedagógica Digital</p>
@@ -392,3 +392,4 @@ st.markdown("""
         Sistema de uso exclusivo do CEIEF Rafael Affonso Leite
     </div>
 """, unsafe_allow_html=True)
+
