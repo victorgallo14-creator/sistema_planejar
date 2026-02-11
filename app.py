@@ -53,6 +53,9 @@ st.markdown("""
     [data-testid="stSidebar"], [data-testid="stSidebarNav"] {
         display: none !important;
     }
+    .st-emotion-cache-16ids0d {
+        display: none !important;
+    }
     
     /* Centralizar conteúdo principal */
     .block-container {
@@ -94,6 +97,7 @@ st.markdown("""
         color: white !important;
         letter-spacing: -1.5px;
         line-height: 1;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     .header-text-sub {
         margin: 8px 0 0 0;
@@ -308,9 +312,10 @@ elif st.session_state.step == 3:
     def gerar_pdf(dados, conteudos):
         pdf = FPDF(); pdf.add_page(); pdf.set_auto_page_break(auto=True, margin=30)
         
-        # Logo Escola (se arquivo existir)
+        # LOGO À DIREITA (PDF)
         logo_e = "logo_escola.png" if os.path.exists("logo_escola.png") else "logo_escola.jpg"
-        if os.path.exists(logo_e): pdf.image(logo_e, 10, 8, 25)
+        if os.path.exists(logo_e):
+            pdf.image(logo_e, 175, 8, 25)
 
         pdf.set_font('Arial', 'B', 14); pdf.cell(0, 10, 'CEIEF RAFAEL AFFONSO LEITE', 0, 1, 'C')
         pdf.set_font('Arial', '', 10); pdf.cell(0, 5, 'Planejamento de Linguagens e Tecnologias', 0, 1, 'C'); pdf.ln(10)
@@ -322,25 +327,56 @@ elif st.session_state.step == 3:
         pdf.cell(0, 7, clean(f"MES: {dados['mes']} | PERIODO: {dados['quinzena']} | TRIMESTRE: {dados['trimestre']}"), 1, 1, 'L', True)
         pdf.cell(0, 7, clean(f"INTERVALO: {dados['periodo']}"), 1, 1, 'L', True); pdf.ln(5)
 
-        # Matriz Curricular Detalhada
+        # Matriz Curricular Detalhada (ALINHAMENTO DAS LINHAS)
         pdf.set_font("Arial", 'B', 10); pdf.cell(0, 8, clean("MATRIZ CURRICULAR SELECIONADA"), 0, 1)
         pdf.set_fill_color(230, 230, 230); pdf.set_font("Arial", 'B', 8)
-        pdf.cell(45, 7, clean("Eixo / Tema"), 1, 0, 'C', True)
-        pdf.cell(70, 7, clean("Habilidade Especifica"), 1, 0, 'C', True)
-        pdf.cell(75, 7, clean("Objetivo do Ano"), 1, 1, 'C', True)
+        
+        col_w = [45, 75, 70] # Eixo, Habilidade, Objetivo
+        pdf.cell(col_w[0], 7, clean("Eixo / Tema"), 1, 0, 'C', True)
+        pdf.cell(col_w[1], 7, clean("Habilidade Especifica"), 1, 0, 'C', True)
+        pdf.cell(col_w[2], 7, clean("Objetivo do Ano"), 1, 1, 'C', True)
         
         pdf.set_font("Arial", '', 8)
         for it in conteudos:
-            x, y = pdf.get_x(), pdf.get_y()
-            pdf.multi_cell(45, 5, clean(f"{it['eixo']}\n({it['geral']})"), 1, 'L')
-            y1 = pdf.get_y()
-            pdf.set_xy(x + 45, y)
-            pdf.multi_cell(70, 5, clean(it['especifico']), 1, 'L')
-            y2 = pdf.get_y()
-            pdf.set_xy(x + 115, y)
-            pdf.multi_cell(75, 5, clean(it['objetivo']), 1, 'L')
-            y3 = pdf.get_y()
-            pdf.set_y(max(y1, y2, y3))
+            x_start = pdf.get_x()
+            y_start = pdf.get_y()
+            
+            # Texto preparado
+            txt_eixo = clean(f"{it['eixo']}\n({it['geral']})")
+            txt_hab = clean(it['especifico'])
+            txt_obj = clean(it['objetivo'])
+            
+            # Cálculo de linhas para alinhar altura
+            # (Simplificado usando a maior altura gerada pelo multi_cell)
+            pdf.multi_cell(col_w[0], 5, txt_eixo, 0, 'L')
+            y_eixo = pdf.get_y()
+            
+            pdf.set_xy(x_start + col_w[0], y_start)
+            pdf.multi_cell(col_w[1], 5, txt_hab, 0, 'L')
+            y_hab = pdf.get_y()
+            
+            pdf.set_xy(x_start + col_w[0] + col_w[1], y_start)
+            pdf.multi_cell(col_w[2], 5, txt_obj, 0, 'L')
+            y_obj = pdf.get_y()
+            
+            max_y = max(y_eixo, y_hab, y_obj)
+            h_row = max_y - y_start
+            
+            # Desenha as bordas da linha inteira para alinhar as colunas
+            pdf.set_xy(x_start, y_start)
+            pdf.cell(col_w[0], h_row, "", 1, 0)
+            pdf.cell(col_w[1], h_row, "", 1, 0)
+            pdf.cell(col_w[2], h_row, "", 1, 1)
+            
+            # Reposiciona o texto dentro da célula com a altura correta (para evitar sobreposição)
+            pdf.set_xy(x_start, y_start)
+            pdf.multi_cell(col_w[0], 5, txt_eixo, 0, 'L')
+            pdf.set_xy(x_start + col_w[0], y_start)
+            pdf.multi_cell(col_w[1], 5, txt_hab, 0, 'L')
+            pdf.set_xy(x_start + col_w[0] + col_w[1], y_start)
+            pdf.multi_cell(col_w[2], 5, txt_obj, 0, 'L')
+            
+            pdf.set_y(max_y)
 
         # Detalhamento
         pdf.ln(5); pdf.set_font("Arial", 'B', 10); pdf.cell(0, 8, clean("DETALHAMENTO PEDAGOGICO"), 0, 1)
@@ -348,7 +384,7 @@ elif st.session_state.step == 3:
             pdf.set_font("Arial", 'B', 9); pdf.cell(0, 5, clean(l + ":"), 0, 1)
             pdf.set_font("Arial", '', 9); pdf.multi_cell(0, 5, clean(v)); pdf.ln(2)
         
-        # Carimbo de Tempo BR
+        # Carimbo de Tempo BR no Rodapé
         pdf.set_auto_page_break(False)
         pdf.set_y(-15); pdf.set_font('Arial', 'I', 7)
         pdf.cell(0, 10, clean(f'Emitido via Sistema Planejar Elite em: {get_brazil_time().strftime("%d/%m/%Y %H:%M:%S")} (GMT-3)'), 0, 0, 'C')
@@ -358,11 +394,19 @@ elif st.session_state.step == 3:
     def gerar_docx(dados, conteudos):
         doc = Document(); style = doc.styles['Normal']; font = style.font; font.name = 'Arial'; font.size = Pt(10)
         
+        # Cabeçalho: Texto à esquerda, Logo à direita
         table_h = doc.add_table(rows=1, cols=2); table_h.autofit = False
-        logo_e = "logo_escola.png" if os.path.exists("logo_escola.png") else "logo_escola.jpg"
-        if os.path.exists(logo_e): table_h.cell(0,0).paragraphs[0].add_run().add_picture(logo_e, width=Cm(2.5))
-        p = table_h.cell(0,1).paragraphs[0]; p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        table_h.columns[0].width = Cm(14)
+        table_h.columns[1].width = Cm(4)
+        
+        p = table_h.cell(0,0).paragraphs[0]; p.alignment = WD_ALIGN_PARAGRAPH.LEFT
         p.add_run("CEIEF RAFAEL AFFONSO LEITE\n").bold = True; p.add_run("Planejamento Digital de Linguagens e Tecnologias")
+        
+        logo_e = "logo_escola.png" if os.path.exists("logo_escola.png") else "logo_escola.jpg"
+        if os.path.exists(logo_e):
+            p_logo = table_h.cell(0,1).paragraphs[0]
+            p_logo.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+            p_logo.add_run().add_picture(logo_e, width=Cm(3.0))
 
         doc.add_paragraph()
         p_info = doc.add_paragraph()
