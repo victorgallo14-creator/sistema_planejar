@@ -20,13 +20,13 @@ from email import encoders
 # ⚙️ CONFIGURAÇÃO DE E-MAIL (PREENCHA AQUI)
 # ==============================================================================
 # 1. E-mail que vai ENVIAR (Seu Gmail ou da Escola)
-EMAIL_REMETENTE = "seu_email_aqui@gmail.com" 
+EMAIL_REMETENTE = "coord.rafaelaffonsoleite@gmail.com" 
 
 # 2. Senha de App (Gerada na segurança do Google - 16 letras)
-SENHA_APP_GOOGLE = "xxxx xxxx xxxx xxxx" 
+SENHA_APP_GOOGLE = "olsi hriz zocu oiyt" 
 
 # 3. E-mail da Coordenação que receberá sempre
-EMAIL_COORDENACAO = "coordenacao.ceief@gmail.com" 
+EMAIL_COORDENACAO = "coord.rafaelaffonsoleite@gmail.com" 
 # ==============================================================================
 
 # --- MATRIZ CURRICULAR ---
@@ -448,3 +448,4 @@ st.markdown(f"""
         Desenvolvido por José Victor Souza Gallo • CEIEF Rafael Affonso Leite © {datetime.now().year}
     </div>
 """, unsafe_allow_html=True)
+
