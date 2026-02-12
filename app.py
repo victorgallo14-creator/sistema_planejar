@@ -149,7 +149,7 @@ def enviar_email_automatico(pdf_bytes, dados, nome_arquivo):
         corpo = f"""
         Olá,
 
-        Um novo planejamento pedagógico foi gerado no Sistema Planejar Elite.
+        Um novo planejamento pedagógico foi gerado no Sistema Planejar.
 
         RESUMO DO DOCUMENTO:
         -----------------------------------
@@ -162,7 +162,7 @@ def enviar_email_automatico(pdf_bytes, dados, nome_arquivo):
         O documento PDF oficial segue em anexo para validação da coordenação e arquivo pessoal do professor.
         
         Atenciosamente,
-        Sistema Planejar Elite
+        Sistema Planejar
         """
         msg.attach(MIMEText(corpo, 'plain'))
 
@@ -191,7 +191,7 @@ with col_main:
     st.markdown(f"""
     <div class="premium-header-box">
         <h1 class="header-text-main">Sistema Planejar</h1>
-        <p class="header-text-sub">Gestão Pedagógica Digital • CEIEF Rafael Affonso Leite</p>
+        <p class="header-text-sub">Uso Interno • CEIEF Rafael Affonso Leite</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -444,8 +444,9 @@ elif st.session_state.step == 3:
 # --- RODAPÉ ---
 st.markdown(f"""
     <div style="text-align:center; margin-top:80px; padding:40px; color:#94a3b8; font-size:0.8rem; border-top:1px solid #e2e8f0;">
-        <b>SISTEMA PLANEJAR ELITE V9.2</b><br>
+        <b>SISTEMA PLANEJAR V9.2</b><br>
         Desenvolvido por José Victor Souza Gallo • CEIEF Rafael Affonso Leite © {datetime.now().year}
     </div>
 """, unsafe_allow_html=True)
+
 
