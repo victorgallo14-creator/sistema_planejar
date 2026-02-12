@@ -93,7 +93,7 @@ with col_main:
     st.markdown(f"""
     <div class="premium-header-box">
         <h1 class="header-text-main">Sistema Planejar</h1>
-        <p class="header-text-sub">Gestão Pedagógica Digital • CEIEF Rafael Affonso Leite</p>
+        <p class="header-text-sub">Uso Interno • CEIEF Rafael Affonso Leite</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -191,7 +191,7 @@ elif st.session_state.step == 2:
                         st.markdown(f"<div style='background:#f8fafc; padding:1.2rem; border-radius:12px; border:1px solid #cbd5e1; margin-top:10px;'><span class='status-tag {tags[idx]}'>Objetivo Pedagógico</span><br><b>{sel['objetivo']}</b></div>", unsafe_allow_html=True)
                         if st.button("Adicionar à Lista ➕", key=f"btn_inf_{idx}"):
                             st.session_state.conteudos_selecionados.append({'tipo': area, 'eixo': sel['eixo'], 'geral': g_sel, 'especifico': e_sel, 'objetivo': sel['objetivo']})
-                            st.toast("Adicionado!")
+                            st.toast("Item adicionado!")
                 else:
                     filtros = chaves[idx]
                     if filtros:
@@ -204,7 +204,7 @@ elif st.session_state.step == 2:
                             if st.button("Adicionar à Lista ➕", key=f"btn_f_{idx}"):
                                 label_tipo = "Tecnologia" if idx == 0 else "Inglês"
                                 st.session_state.conteudos_selecionados.append({'tipo': label_tipo, 'eixo': sel['eixo'], 'geral': g, 'especifico': e, 'objetivo': sel['objetivo']})
-                                st.toast("Adicionado!")
+                                st.toast("Item adicionado!")
         st.markdown('</div>', unsafe_allow_html=True)
 
     if st.session_state.conteudos_selecionados:
@@ -270,6 +270,7 @@ elif st.session_state.step == 3:
         pdf.set_auto_page_break(False); pdf.set_y(-15); pdf.set_font('Arial', 'I', 7)
         pdf.cell(0, 10, clean(f'Emitido via Sistema Planejar em: {get_brazil_time().strftime("%d/%m/%Y %H:%M:%S")} (GMT-3)'), 0, 0, 'C')
         pdf.set_auto_page_break(True, margin=30)
+        
         return bytes(pdf.output(dest='S').encode('latin-1'))
 
     def gerar_docx(dados, conteudos):
@@ -310,7 +311,7 @@ elif st.session_state.step == 3:
 # --- RODAPÉ ---
 st.markdown(f"""
     <div style="text-align:center; margin-top:80px; padding:40px; color:#94a3b8; font-size:0.8rem; border-top:1px solid #e2e8f0;">
-        <b>SISTEMA PLANEJAR ELITE V8.2</b><br>
+        <b>SISTEMA PLANEJAR V8.3</b><br>
         Desenvolvido por José Victor Souza Gallo • CEIEF Rafael Affonso Leite © {datetime.now().year}
     </div>
 """, unsafe_allow_html=True)
