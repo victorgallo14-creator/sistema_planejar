@@ -124,28 +124,29 @@ def clean(t):
 # --- FUNÇÃO DE E-MAIL AUTOMÁTICO ---
 def enviar_email_automatico(pdf_bytes, dados, nome_arquivo):
     """Envia o PDF para a coordenação e CC para o professor."""
+    # Validação básica de configuração
     if "xxxx" in SENHA_APP_GOOGLE:
-        return False, "Senha de App do Google não configurada no código."
+        return False, "⚠️ Configuração de e-mail pendente (Senha de App)."
     
     try:
         msg = MIMEMultipart()
         msg['From'] = EMAIL_REMETENTE
         msg['To'] = EMAIL_COORDENACAO
-        # Adiciona o professor em cópia se houver e-mail válido
+        
+        # Lógica de Cópia (Cc) para o Professor
+        destinatarios = [EMAIL_COORDENACAO]
         if dados.get('email_prof') and "@" in dados['email_prof']:
             msg['Cc'] = dados['email_prof']
-            destinatarios = [EMAIL_COORDENACAO, dados['email_prof']]
-        else:
-            destinatarios = [EMAIL_COORDENACAO]
+            destinatarios.append(dados['email_prof'])
 
-        msg['Subject'] = f"Planejamento: {dados['professor']} - {dados['mes']}"
+        msg['Subject'] = f"Planejamento Entregue: {dados['professor']} - {dados['mes']}"
 
         corpo = f"""
         Olá,
 
-        Segue em anexo o planejamento pedagógico gerado pelo Sistema Planejar Elite.
+        Um novo planejamento foi gerado e entregue pelo Sistema Planejar Elite.
 
-        DADOS DO PLANEJAMENTO:
+        DADOS DO REGISTRO:
         -----------------------------------
         Professor(a): {dados['professor']}
         Ano/Turma: {dados['ano']} - {', '.join(dados['turmas'])}
@@ -153,7 +154,10 @@ def enviar_email_automatico(pdf_bytes, dados, nome_arquivo):
         Data de Emissão: {get_brazil_time().strftime("%d/%m/%Y às %H:%M")}
         -----------------------------------
 
-        Este é um e-mail automático. Não é necessário responder.
+        O documento PDF segue em anexo para validação da coordenação e arquivo do professor.
+        
+        Atenciosamente,
+        Sistema Planejar Elite
         """
         msg.attach(MIMEText(corpo, 'plain'))
 
@@ -201,12 +205,18 @@ if st.session_state.step == 1:
     st.markdown("### 📋 Identificação do Planejamento")
     st.write("")
     
+    # Linha 1: Professor e Email
     c1, c2 = st.columns(2)
     with c1:
         professor = st.text_input("PROFESSOR(A) RESPONSÁVEL", value=st.session_state.config.get('professor', ''), placeholder="Nome Completo")
-        # NOVO CAMPO: E-mail do Professor
+    with c2:
         email_prof = st.text_input("E-MAIL DO PROFESSOR (Para receber cópia)", value=st.session_state.config.get('email_prof', ''), placeholder="exemplo@email.com")
-        
+
+    st.write("") # Espaço
+
+    # Linha 2: Ano e Turmas
+    c3, c4 = st.columns(2)
+    with c3:
         anos = list(CURRICULO_DB.keys())
         if "Maternal I" in anos: anos.remove("Maternal I"); anos.insert(0, "Maternal I")
         saved_ano = st.session_state.config.get('ano')
@@ -219,8 +229,8 @@ if st.session_state.step == 1:
             max_t = qtd.get(ano, 3)
             opts = [f"{prefix}{i}" for i in range(1, max_t + 1) for prefix in ([f"{ano} - Turma " if "Etapa" in ano else f"{ano} "])]
         turmas = st.multiselect("TURMAS VINCULADAS", opts, default=[t for t in st.session_state.config.get('turmas', []) if t in opts])
-
-    with c2:
+    
+    with c4:
         meses = {2: "Fevereiro", 3: "Março", 4: "Abril", 5: "Maio", 6: "Junho", 7: "Julho", 8: "Agosto", 9: "Setembro", 10: "Outubro", 11: "Novembro", 12: "Dezembro"}
         saved_mes = st.session_state.config.get('mes')
         idx_mes = list(meses.values()).index(saved_mes) if saved_mes in list(meses.values()) else 0
@@ -237,17 +247,18 @@ if st.session_state.step == 1:
             ultimo = calendar.monthrange(2026, mes_num)[1]
             periodo_texto = f"01/{mes_num:02d}/2026 a 15/{mes_num:02d}/2026" if "1ª" in q_sel else f"16/{mes_num:02d}/2026 a {ultimo}/{mes_num:02d}/2026"
             trimestre_doc = tri
+
     st.markdown('</div>', unsafe_allow_html=True)
     
     if st.button("Avançar para Matriz Curricular ➔", type="primary", use_container_width=True):
         if not professor or not turmas or not email_prof:
-            st.error("ERRO: Preencha todos os campos, incluindo o e-mail.")
+            st.error("ERRO: Todos os campos (incluindo e-mail) são obrigatórios.")
         else:
             if st.session_state.config.get('ano') != ano: st.session_state.conteudos_selecionados = []
-            st.session_state.config.update({
+            st.session_state.config = {
                 'professor': professor, 'email_prof': email_prof, 'ano': ano, 'turmas': turmas, 
-                'mes': mes_nome, 'periodo': periodo_texto, 'trimestre': trimestre_doc, 'quinzena': quinzen_label
-            })
+                'mes': mes_nome, 'periodo': periodo_texto, 'trimestre': trimestre_doc, 'quinzena': quinzen_label if 'quinzena_label' in locals() else quinzen_label
+            }
             set_step(2); st.rerun()
 
 # --- PASSO 2: MATRIZ ---
@@ -413,7 +424,7 @@ elif st.session_state.step == 3:
 # --- RODAPÉ ---
 st.markdown(f"""
     <div style="text-align:center; margin-top:80px; padding:40px; color:#94a3b8; font-size:0.8rem; border-top:1px solid #e2e8f0;">
-        <b>SISTEMA PLANEJAR ELITE V8.1</b><br>
+        <b>SISTEMA PLANEJAR ELITE V9.0</b><br>
         Desenvolvido por José Victor Souza Gallo • CEIEF Rafael Affonso Leite © {datetime.now().year}
     </div>
 """, unsafe_allow_html=True)
