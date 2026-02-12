@@ -9,7 +9,7 @@ from datetime import datetime, timedelta, timezone
 import os
 import base64
 
-# --- BIBLIOTECAS DE E-MAIL (PADRÃO PYTHON) ---
+# --- BIBLIOTECAS DE E-MAIL ---
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -17,7 +17,7 @@ from email.mime.base import MIMEBase
 from email import encoders
 
 # ==============================================================================
-# ⚙️ CONFIGURAÇÃO DE E-MAIL (CONFIGURE AQUI)
+# ⚙️ CONFIGURAÇÃO DE E-MAIL (PREENCHA AQUI)
 # ==============================================================================
 # 1. E-mail que vai ENVIAR (Seu Gmail ou da Escola)
 EMAIL_REMETENTE = "seu_email_aqui@gmail.com" 
@@ -33,7 +33,7 @@ EMAIL_COORDENACAO = "coordenacao.ceief@gmail.com"
 try:
     from dados_curriculo import CURRICULO_DB
 except ModuleNotFoundError:
-    st.error("ERRO: Base de dados curricular não encontrada.")
+    st.error("ERRO CRÍTICO: Base de dados curricular não encontrada.")
     st.stop()
 
 # --- 1. CONFIGURAÇÃO DE ALTA PERFORMANCE ---
@@ -62,6 +62,8 @@ st.markdown("""
     }
     
     .stApp { background-color: #f8fafc; }
+    
+    /* Esconde elementos nativos */
     [data-testid="stSidebar"], [data-testid="stSidebarNav"] { display: none !important; }
     .st-emotion-cache-16ids0d { display: none !important; }
     
@@ -89,6 +91,7 @@ st.markdown("""
 
     /* CARDS E INPUTS */
     .card-container { background: white; border-radius: 16px; padding: 2.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0; margin-bottom: 1.5rem; }
+    
     .stTextInput input, .stTextArea textarea, .stSelectbox div[data-baseweb="select"] {
         border: 2px solid #cbd5e1 !important; border-radius: 12px !important;
         background-color: #ffffff !important; color: #0f172a !important; font-weight: 500 !important;
@@ -103,6 +106,8 @@ st.markdown("""
     .tag-blue { background-color: #eff6ff; color: #1e40af; border-color: #bfdbfe; }
     .tag-green { background-color: #f0fdf4; color: #166534; border-color: #bbf7d0; }
     .tag-orange { background-color: #fffaf2; color: #9a3412; border-color: #fed7aa; }
+
+    label { font-weight: 700 !important; color: #334155 !important; font-size: 0.85rem !important; margin-bottom: 8px !important; text-transform: uppercase; }
 
     @media (max-width: 768px) {
         .premium-header-box { height: auto; padding: 1.5rem; }
@@ -133,28 +138,28 @@ def enviar_email_automatico(pdf_bytes, dados, nome_arquivo):
         msg['From'] = EMAIL_REMETENTE
         msg['To'] = EMAIL_COORDENACAO
         
-        # Lógica de Cópia (Cc) para o Professor
-        destinatarios = [EMAIL_COORDENACAO]
+        # Adiciona Professor em Cópia (Cc)
+        recipients = [EMAIL_COORDENACAO]
         if dados.get('email_prof') and "@" in dados['email_prof']:
             msg['Cc'] = dados['email_prof']
-            destinatarios.append(dados['email_prof'])
-
+            recipients.append(dados['email_prof'])
+        
         msg['Subject'] = f"Planejamento Entregue: {dados['professor']} - {dados['mes']}"
 
         corpo = f"""
         Olá,
 
-        Um novo planejamento foi gerado e entregue pelo Sistema Planejar Elite.
+        Um novo planejamento pedagógico foi gerado no Sistema Planejar Elite.
 
-        DADOS DO REGISTRO:
+        RESUMO DO DOCUMENTO:
         -----------------------------------
-        Professor(a): {dados['professor']}
+        Docente: {dados['professor']}
         Ano/Turma: {dados['ano']} - {', '.join(dados['turmas'])}
         Período: {dados['periodo']} ({dados['quinzena']})
         Data de Emissão: {get_brazil_time().strftime("%d/%m/%Y às %H:%M")}
         -----------------------------------
 
-        O documento PDF segue em anexo para validação da coordenação e arquivo do professor.
+        O documento PDF oficial segue em anexo para validação da coordenação e arquivo pessoal do professor.
         
         Atenciosamente,
         Sistema Planejar Elite
@@ -172,9 +177,9 @@ def enviar_email_automatico(pdf_bytes, dados, nome_arquivo):
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
         server.login(EMAIL_REMETENTE, SENHA_APP_GOOGLE)
-        server.sendmail(EMAIL_REMETENTE, destinatarios, msg.as_string())
+        server.sendmail(EMAIL_REMETENTE, recipients, msg.as_string())
         server.quit()
-        return True, "E-mail enviado com sucesso para Coordenação e Professor!"
+        return True, "E-mail enviado com sucesso para a Coordenação e para o Professor!"
     except Exception as e:
         return False, f"Falha no envio do e-mail: {str(e)}"
 
@@ -205,12 +210,12 @@ if st.session_state.step == 1:
     st.markdown("### 📋 Identificação do Planejamento")
     st.write("")
     
-    # Linha 1: Professor e Email
+    # Linha 1: Professor e E-mail
     c1, c2 = st.columns(2)
     with c1:
         professor = st.text_input("PROFESSOR(A) RESPONSÁVEL", value=st.session_state.config.get('professor', ''), placeholder="Nome Completo")
     with c2:
-        email_prof = st.text_input("E-MAIL DO PROFESSOR (Para receber cópia)", value=st.session_state.config.get('email_prof', ''), placeholder="exemplo@email.com")
+        email_prof = st.text_input("E-MAIL DO PROFESSOR (Para receber cópia)", value=st.session_state.config.get('email_prof', ''), placeholder="ex: professor@email.com")
 
     st.write("") # Espaço
 
@@ -218,7 +223,9 @@ if st.session_state.step == 1:
     c3, c4 = st.columns(2)
     with c3:
         anos = list(CURRICULO_DB.keys())
+        # Reordenar para MI ficar no topo
         if "Maternal I" in anos: anos.remove("Maternal I"); anos.insert(0, "Maternal I")
+        
         saved_ano = st.session_state.config.get('ano')
         idx_ano = anos.index(saved_ano) if saved_ano in anos else 0
         ano = st.selectbox("ANO DE ESCOLARIDADE", anos, index=idx_ano)
@@ -228,7 +235,9 @@ if st.session_state.step == 1:
             qtd = {"Etapa I": 3, "Etapa II": 3, "1º Ano": 3, "2º Ano": 3, "3º Ano": 3, "4º Ano": 3, "5º Ano": 3}
             max_t = qtd.get(ano, 3)
             opts = [f"{prefix}{i}" for i in range(1, max_t + 1) for prefix in ([f"{ano} - Turma " if "Etapa" in ano else f"{ano} "])]
-        turmas = st.multiselect("TURMAS VINCULADAS", opts, default=[t for t in st.session_state.config.get('turmas', []) if t in opts])
+        
+        valid_defaults = [t for t in st.session_state.config.get('turmas', []) if t in opts]
+        turmas = st.multiselect("TURMAS VINCULADAS", opts, default=valid_defaults)
     
     with c4:
         meses = {2: "Fevereiro", 3: "Março", 4: "Abril", 5: "Maio", 6: "Junho", 7: "Julho", 8: "Agosto", 9: "Setembro", 10: "Outubro", 11: "Novembro", 12: "Dezembro"}
@@ -237,6 +246,7 @@ if st.session_state.step == 1:
         mes_nome = st.selectbox("MÊS DE REFERÊNCIA", list(meses.values()), index=idx_mes)
         mes_num = [k for k, v in meses.items() if v == mes_nome][0]
         
+        # CORREÇÃO DA LÓGICA DE QUINZENA
         if mes_num == 2:
             quinzena_label = "Mês Inteiro"
             periodo_texto = "01/02/2026 a 28/02/2026"
@@ -249,17 +259,25 @@ if st.session_state.step == 1:
             ultimo = calendar.monthrange(2026, mes_num)[1]
             periodo_texto = f"01/{mes_num:02d}/2026 a 15/{mes_num:02d}/2026" if "1ª" in q_sel else f"16/{mes_num:02d}/2026 a {ultimo}/{mes_num:02d}/2026"
             trimestre_doc = tri
-
+            
     st.markdown('</div>', unsafe_allow_html=True)
     
     if st.button("Avançar para Matriz Curricular ➔", type="primary", use_container_width=True):
         if not professor or not turmas or not email_prof:
-            st.error("ERRO: Todos os campos (incluindo e-mail) são obrigatórios.")
+            st.error("ERRO: Preencha todos os campos obrigatórios, incluindo o e-mail.")
         else:
             if st.session_state.config.get('ano') != ano: st.session_state.conteudos_selecionados = []
+            
+            # Salva no estado com todas as variáveis definidas corretamente
             st.session_state.config = {
-                'professor': professor, 'email_prof': email_prof, 'ano': ano, 'turmas': turmas, 
-                'mes': mes_nome, 'periodo': periodo_texto, 'trimestre': trimestre_doc, 'quinzena': quinzen_label if 'quinzena_label' in locals() else quinzen_label
+                'professor': professor,
+                'email_prof': email_prof, 
+                'ano': ano, 
+                'turmas': turmas, 
+                'mes': mes_nome, 
+                'periodo': periodo_texto, 
+                'trimestre': trimestre_doc, 
+                'quinzena': quinzena_label # Variável agora existe em ambos os casos (Fev ou outros)
             }
             set_step(2); st.rerun()
 
@@ -291,10 +309,10 @@ elif st.session_state.step == 2:
                         c1, c2 = st.columns(2)
                         opcoes_g = sorted(list(set([it['geral'] for it in dados[area]])))
                         g_sel = c1.selectbox(f"CONTEÚDO GERAL", opcoes_g, key=f"inf_g_{idx}")
-                        filtro = [it for it in dados[area] if it['geral'] == g_sel]
-                        es = [it['especifico'] for it in filtro]
-                        e_sel = c2.selectbox(f"CONTEÚDO ESPECÍFICO", es, key=f"inf_e_{idx}")
-                        sel = next((it for it in filtro if it['especifico'] == e_sel), None)
+                        itens_filtrados = [it for it in dados[area] if it['geral'] == g_sel]
+                        opcoes_e = [it['especifico'] for it in itens_filtrados]
+                        e_sel = c2.selectbox(f"CONTEÚDO ESPECÍFICO", opcoes_e, key=f"inf_e_{idx}")
+                        sel = next((it for it in itens_filtrados if it['especifico'] == e_sel), None)
                         if sel:
                             st.markdown(f"<div style='background:#f8fafc; padding:1.2rem; border-radius:12px; border:1px solid #cbd5e1; margin-top:10px;'><span class='status-tag {tags[idx]}'>Objetivo Pedagógico</span><br><b>{sel['objetivo']}</b></div>", unsafe_allow_html=True)
                             if st.button("Adicionar à Lista ➕", key=f"btn_inf_{idx}"):
@@ -426,7 +444,7 @@ elif st.session_state.step == 3:
 # --- RODAPÉ ---
 st.markdown(f"""
     <div style="text-align:center; margin-top:80px; padding:40px; color:#94a3b8; font-size:0.8rem; border-top:1px solid #e2e8f0;">
-        <b>SISTEMA PLANEJAR ELITE V9.1</b><br>
+        <b>SISTEMA PLANEJAR ELITE V9.2</b><br>
         Desenvolvido por José Victor Souza Gallo • CEIEF Rafael Affonso Leite © {datetime.now().year}
     </div>
 """, unsafe_allow_html=True)
