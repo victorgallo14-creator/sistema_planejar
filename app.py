@@ -9,26 +9,6 @@ from datetime import datetime, timedelta, timezone
 import os
 import base64
 
-# --- BIBLIOTECAS DE E-MAIL ---
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from email.mime.application import MIMEBase
-from email import encoders
-
-# ==============================================================================
-# ⚙️ CONFIGURAÇÃO DE E-MAIL (PREENCHA AQUI)
-# ==============================================================================
-# 1. Seu e-mail (Gmail) que enviará os planejamentos
-EMAIL_REMETENTE = "seu_email_aqui@gmail.com" 
-
-# 2. Sua Senha de App (Gerada na segurança da conta Google - 16 letras)
-SENHA_APP_GOOGLE = "xxxx xxxx xxxx xxxx" 
-
-# 3. E-mail da Coordenação que receberá os PDFs
-EMAIL_COORDENACAO = "email_da_coordenacao@escola.com" 
-# ==============================================================================
-
 # --- MATRIZ CURRICULAR ---
 try:
     from dados_curriculo import CURRICULO_DB
@@ -45,11 +25,15 @@ st.set_page_config(
 )
 
 # --- 2. GESTÃO DE ESTADO ---
-if 'step' not in st.session_state: st.session_state.step = 1
-if 'conteudos_selecionados' not in st.session_state: st.session_state.conteudos_selecionados = []
-if 'config' not in st.session_state: st.session_state.config = {}
+if 'step' not in st.session_state: 
+    st.session_state.step = 1
+if 'conteudos_selecionados' not in st.session_state: 
+    st.session_state.conteudos_selecionados = []
+if 'config' not in st.session_state: 
+    st.session_state.config = {}
 
-def set_step(s): st.session_state.step = s
+def set_step(s): 
+    st.session_state.step = s
 
 # --- 3. ESTILIZAÇÃO CSS (PREMIUM UI) ---
 st.markdown("""
@@ -101,51 +85,8 @@ def get_brazil_time():
 def clean(t): 
     return t.encode('latin-1', 'replace').decode('latin-1') if t else ""
 
-def enviar_email_automatico(pdf_bytes, dados, nome_arquivo):
-    """Envia o PDF gerado para a coordenação."""
-    try:
-        msg = MIMEMultipart()
-        msg['From'] = EMAIL_REMETENTE
-        msg['To'] = EMAIL_COORDENACAO
-        msg['Subject'] = f"Planejamento Entregue: {dados['professor']} - {dados['mes']}"
-
-        corpo = f"""
-        Olá Coordenação,
-
-        Um novo planejamento foi finalizado no Sistema Planejar Elite.
-        
-        - Professor(a): {dados['professor']}
-        - Ano/Turma: {dados['ano']} ({dados['turmas']})
-        - Período: {dados['periodo']} ({dados['quinzena']})
-        
-        O documento PDF segue em anexo.
-        
-        Atenciosamente,
-        Sistema Planejar Elite
-        """
-        msg.attach(MIMEText(corpo, 'plain'))
-
-        # Anexo
-        part = MIMEBase('application', 'octet-stream')
-        part.set_payload(pdf_bytes)
-        encoders.encode_base64(part)
-        part.add_header('Content-Disposition', f"attachment; filename= {nome_arquivo}.pdf")
-        msg.attach(part)
-
-        # Conexão SMTP
-        server = smtplib.SMTP('smtp.gmail.com', 587)
-        server.starttls()
-        server.login(EMAIL_REMETENTE, SENHA_APP_GOOGLE)
-        text = msg.as_string()
-        server.sendmail(EMAIL_REMETENTE, EMAIL_COORDENACAO, text)
-        server.quit()
-        return True, "E-mail enviado com sucesso!"
-    except Exception as e:
-        return False, f"Erro no envio: {str(e)}"
-
 # --- 4. RENDERIZAÇÃO DO CABEÇALHO ---
-st.write("") # Espaço 1
-st.write("") # Espaço 2 (Conforme solicitado)
+st.write("") 
 col_main, col_logo = st.columns([8, 2], vertical_alignment="center")
 
 with col_main:
@@ -302,7 +243,8 @@ elif st.session_state.step == 3:
         pdf.set_font('Arial', 'B', 14); pdf.cell(0, 10, clean('CEIEF RAFAEL AFFONSO LEITE'), 0, 1, 'C')
         pdf.set_font('Arial', '', 10); pdf.cell(0, 5, clean('Planejamento de Unidade de Ensino'), 0, 1, 'C'); pdf.ln(10)
         pdf.set_fill_color(245, 247, 250); pdf.set_font("Arial", 'B', 9)
-        pdf.cell(0, 7, clean(f"DOCENTE: {dados['professor']} | ANO: {dados['ano']} | TURMAS: {', '.join(dados['turmas'])}"), 1, 1, 'L', True)
+        pdf.cell(0, 7, clean(f"DOCENTE: {dados['professor']}"), 1, 1, 'L', True)
+        pdf.cell(0, 7, clean(f"ANO: {dados['ano']} | TURMAS: {', '.join(dados['turmas'])}"), 1, 1, 'L', True)
         pdf.cell(0, 7, clean(f"MES: {dados['mes']} | PERIODO: {dados['quinzena']} | TRIMESTRE: {dados['trimestre']}"), 1, 1, 'L', True)
         pdf.cell(0, 7, clean(f"INTERVALO: {dados['periodo']}"), 1, 1, 'L', True); pdf.ln(5)
         pdf.set_font("Arial", 'B', 10); pdf.cell(0, 8, clean("MATRIZ CURRICULAR SELECIONADA"), 0, 1)
@@ -328,7 +270,6 @@ elif st.session_state.step == 3:
         pdf.set_auto_page_break(False); pdf.set_y(-15); pdf.set_font('Arial', 'I', 7)
         pdf.cell(0, 10, clean(f'Emitido via Sistema Planejar em: {get_brazil_time().strftime("%d/%m/%Y %H:%M:%S")} (GMT-3)'), 0, 0, 'C')
         pdf.set_auto_page_break(True, margin=30)
-        
         return bytes(pdf.output(dest='S').encode('latin-1'))
 
     def gerar_docx(dados, conteudos):
@@ -356,20 +297,12 @@ elif st.session_state.step == 3:
     if c2.button("GERAR PLANEJAMENTO FINAL 🚀", type="primary", use_container_width=True):
         if not all([obj_esp, sit, rec, recup]): st.error("Erro: Preencha todos os campos.")
         else:
-            with st.spinner("Gerando documentos e enviando e-mail..."):
+            with st.spinner("Gerando documentos..."):
                 f_data = st.session_state.config
                 w_file = gerar_docx(f_data, st.session_state.conteudos_selecionados)
                 p_file = gerar_pdf(f_data, st.session_state.conteudos_selecionados)
                 nome_arq = f"Plan_{f_data['mes']}_{f_data['ano'].replace(' ','')}"
-                
-                # TENTA ENVIAR E-MAIL
-                sucesso_email, msg_email = enviar_email_automatico(p_file, f_data, nome_arq)
-                
-                if sucesso_email:
-                    st.success(f"✅ {msg_email}")
-                else:
-                    st.warning(f"⚠️ Documentos gerados, mas o e-mail falhou: {msg_email}")
-                    
+                st.success("✅ Documentação gerada com sucesso!")
                 cd1, cd2 = st.columns(2)
                 cd1.download_button("📄 Download WORD", w_file, f"{nome_arq}.docx", use_container_width=True)
                 cd2.download_button("📕 Download PDF", p_file, f"{nome_arq}.pdf", use_container_width=True)
