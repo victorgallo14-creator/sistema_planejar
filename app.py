@@ -175,7 +175,7 @@ with col_main:
     st.markdown(f"""
     <div class="premium-header-box">
         <h1 class="header-text-main">Sistema Planejar</h1>
-        <p class="header-text-sub">Gestão Pedagógica Digital • CEIEF Rafael Affonso Leite</p>
+        <p class="header-text-sub">Uso Interno • CEIEF Rafael Affonso Leite</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -434,3 +434,4 @@ st.markdown(f"""
         Desenvolvido por José Victor Souza Gallo • CEIEF Rafael Affonso Leite © {datetime.now().year}
     </div>
 """, unsafe_allow_html=True)
+
