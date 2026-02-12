@@ -238,7 +238,9 @@ if st.session_state.step == 1:
         mes_num = [k for k, v in meses.items() if v == mes_nome][0]
         
         if mes_num == 2:
-            quinzena_label, periodo_texto, trimestre_doc = "Mês Inteiro", "01/02/2026 a 28/02/2026", "1º Trimestre"
+            quinzena_label = "Mês Inteiro"
+            periodo_texto = "01/02/2026 a 28/02/2026"
+            trimestre_doc = "1º Trimestre"
             st.info("Nota: Fevereiro é Planejamento Mensal.")
         else:
             q_sel = st.radio("PERÍODO DE EXECUÇÃO", ["1ª Quinzena (01-15)", "2ª Quinzena (16-Fim)"], horizontal=True)
@@ -424,7 +426,7 @@ elif st.session_state.step == 3:
 # --- RODAPÉ ---
 st.markdown(f"""
     <div style="text-align:center; margin-top:80px; padding:40px; color:#94a3b8; font-size:0.8rem; border-top:1px solid #e2e8f0;">
-        <b>SISTEMA PLANEJAR ELITE V9.0</b><br>
+        <b>SISTEMA PLANEJAR ELITE V9.1</b><br>
         Desenvolvido por José Victor Souza Gallo • CEIEF Rafael Affonso Leite © {datetime.now().year}
     </div>
 """, unsafe_allow_html=True)
