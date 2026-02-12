@@ -20,13 +20,13 @@ from email import encoders
 # ⚙️ CONFIGURAÇÃO DE E-MAIL (PREENCHA AQUI)
 # ==============================================================================
 # 1. Seu e-mail (Gmail) que enviará os planejamentos
-EMAIL_REMETENTE = "coord.rafaelaffonsoleite@gmail.com" 
+EMAIL_REMETENTE = "seu_email_aqui@gmail.com" 
 
 # 2. Sua Senha de App (Gerada na segurança da conta Google - 16 letras)
-SENHA_APP_GOOGLE = "olsi hriz zocu oiyt" 
+SENHA_APP_GOOGLE = "xxxx xxxx xxxx xxxx" 
 
 # 3. E-mail da Coordenação que receberá os PDFs
-EMAIL_COORDENACAO = "coord.rafaelaffonsoleite@gmail.com" 
+EMAIL_COORDENACAO = "email_da_coordenacao@escola.com" 
 # ==============================================================================
 
 # --- MATRIZ CURRICULAR ---
@@ -376,7 +376,7 @@ elif st.session_state.step == 3:
 # --- RODAPÉ ---
 st.markdown(f"""
     <div style="text-align:center; margin-top:80px; padding:40px; color:#94a3b8; font-size:0.8rem; border-top:1px solid #e2e8f0;">
-        <b>SISTEMA PLANEJAR V8.1</b><br>
+        <b>SISTEMA PLANEJAR ELITE V8.1</b><br>
         Desenvolvido por José Victor Souza Gallo • CEIEF Rafael Affonso Leite © {datetime.now().year}
     </div>
 """, unsafe_allow_html=True)
