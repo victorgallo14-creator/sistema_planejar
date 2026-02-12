@@ -143,8 +143,9 @@ def enviar_email_automatico(pdf_bytes, dados, nome_arquivo):
     except Exception as e:
         return False, f"Erro no envio: {str(e)}"
 
-# --- 4. CABEÇALHO ---
-st.write("") 
+# --- 4. RENDERIZAÇÃO DO CABEÇALHO ---
+st.write("") # Espaço 1
+st.write("") # Espaço 2 (Conforme solicitado)
 col_main, col_logo = st.columns([8, 2], vertical_alignment="center")
 
 with col_main:
@@ -260,7 +261,8 @@ elif st.session_state.step == 2:
                         if sel:
                             st.markdown(f"<div style='background:#f8fafc; padding:1.2rem; border-radius:12px; border:1px solid #cbd5e1; margin-top:10px;'><span class='status-tag {tags[idx]}'>Objetivo do Currículo</span><br><b>{sel['objetivo']}</b></div>", unsafe_allow_html=True)
                             if st.button("Adicionar à Lista ➕", key=f"btn_f_{idx}"):
-                                st.session_state.conteudos_selecionados.append({'tipo': "Tecnologia" if idx==0 else "Inglês", 'eixo': sel['eixo'], 'geral': g, 'especifico': e, 'objetivo': sel['objetivo']})
+                                label_tipo = "Tecnologia" if idx == 0 else "Inglês"
+                                st.session_state.conteudos_selecionados.append({'tipo': label_tipo, 'eixo': sel['eixo'], 'geral': g, 'especifico': e, 'objetivo': sel['objetivo']})
                                 st.toast("Adicionado!")
         st.markdown('</div>', unsafe_allow_html=True)
 
@@ -284,10 +286,10 @@ elif st.session_state.step == 3:
         st.markdown('<div class="card-container">', unsafe_allow_html=True)
         st.markdown("<div style='color:#be123c; font-weight:800; font-size:0.8rem; margin-bottom:1.5rem;'>PREENCHIMENTO OBRIGATÓRIO</div>", unsafe_allow_html=True)
         
-        obj_esp = st.text_area("Objetivos Específicos", height=100, placeholder="Resultados práticos esperados...", value=st.session_state.config.get('obj_esp', ''))
+        obj_esp = st.text_area("Objetivos Específicos", height=100, placeholder="Defina os resultados práticos pretendidos...", value=st.session_state.config.get('obj_esp', ''))
         c1, c2 = st.columns(2)
-        with c1: sit = st.text_area("Situação didática", height=200, placeholder="Passo a passo...", value=st.session_state.config.get('sit', ''))
-        with c2: rec = st.text_area("Recursos e Materiais", height=200, value=st.session_state.config.get('rec', 'Descritos na situação didática'))
+        with c1: sit = st.text_area("Situação didática", height=220, placeholder="Passo a passo...", value=st.session_state.config.get('sit', ''))
+        with c2: rec = st.text_area("Recursos e Materiais", height=220, value=st.session_state.config.get('rec', 'Descritos na situação didática'))
         recup = st.text_area("Recuperação Contínua", height=100, value=st.session_state.config.get('recup', ''))
         st.markdown('</div>', unsafe_allow_html=True)
 
@@ -303,10 +305,10 @@ elif st.session_state.step == 3:
         pdf.cell(0, 7, clean(f"DOCENTE: {dados['professor']} | ANO: {dados['ano']} | TURMAS: {', '.join(dados['turmas'])}"), 1, 1, 'L', True)
         pdf.cell(0, 7, clean(f"MES: {dados['mes']} | PERIODO: {dados['quinzena']} | TRIMESTRE: {dados['trimestre']}"), 1, 1, 'L', True)
         pdf.cell(0, 7, clean(f"INTERVALO: {dados['periodo']}"), 1, 1, 'L', True); pdf.ln(5)
-        pdf.set_font("Arial", 'B', 10); pdf.cell(0, 8, clean("MATRIZ CURRICULAR"), 0, 1)
+        pdf.set_font("Arial", 'B', 10); pdf.cell(0, 8, clean("MATRIZ CURRICULAR SELECIONADA"), 0, 1)
         pdf.set_fill_color(230, 230, 230); pdf.set_font("Arial", 'B', 8)
         col_w = [45, 75, 70]
-        pdf.cell(col_w[0], 7, clean("Eixo / Tema"), 1, 0, 'C', True); pdf.cell(col_w[1], 7, clean("Habilidade"), 1, 0, 'C', True); pdf.cell(col_w[2], 7, clean("Objetivo"), 1, 1, 'C', True)
+        pdf.cell(col_w[0], 7, clean("Eixo / Tema"), 1, 0, 'C', True); pdf.cell(col_w[1], 7, clean("Habilidade Especifica"), 1, 0, 'C', True); pdf.cell(col_w[2], 7, clean("Objetivo do Ano"), 1, 1, 'C', True)
         pdf.set_font("Arial", '', 8)
         for it in conteudos:
             x, y = pdf.get_x(), pdf.get_y()
@@ -327,7 +329,6 @@ elif st.session_state.step == 3:
         pdf.cell(0, 10, clean(f'Emitido via Sistema Planejar em: {get_brazil_time().strftime("%d/%m/%Y %H:%M:%S")} (GMT-3)'), 0, 0, 'C')
         pdf.set_auto_page_break(True, margin=30)
         
-        # RETORNO CORRIGIDO: Retorna os bytes do PDF
         return bytes(pdf.output(dest='S').encode('latin-1'))
 
     def gerar_docx(dados, conteudos):
@@ -337,7 +338,7 @@ elif st.session_state.step == 3:
         logo_e = "logo_escola.png" if os.path.exists("logo_escola.png") else "logo_escola.jpg"
         if os.path.exists(logo_e): table_h.cell(0,1).paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.RIGHT; table_h.cell(0,1).paragraphs[0].add_run().add_picture(logo_e, width=Cm(3.0))
         doc.add_paragraph(); p_info = doc.add_paragraph(); p_info.add_run(f"DOCENTE: {dados['professor']}\n").bold = True; p_info.add_run(f"ANO: {dados['ano']} | TURMAS: {', '.join(dados['turmas'])}\n"); p_info.add_run(f"MES: {dados['mes']} | PERIODO: {dados['quinzena']} | TRIMESTRE: {dados['trimestre']}\n"); p_info.add_run(f"INTERVALO: {dados['periodo']}")
-        doc.add_heading("Matriz Curricular", 2); table = doc.add_table(rows=1, cols=3); table.style = 'Table Grid'
+        doc.add_heading("Matriz Curricular Selecionada", 2); table = doc.add_table(rows=1, cols=3); table.style = 'Table Grid'
         hdr = table.rows[0].cells; hdr[0].text = 'Eixo / Tema'; hdr[1].text = 'Habilidade Especifica'; hdr[2].text = 'Objetivo do Ano'
         for cell in hdr: cell.paragraphs[0].runs[0].bold = True
         for it in conteudos:
@@ -376,7 +377,7 @@ elif st.session_state.step == 3:
 # --- RODAPÉ ---
 st.markdown(f"""
     <div style="text-align:center; margin-top:80px; padding:40px; color:#94a3b8; font-size:0.8rem; border-top:1px solid #e2e8f0;">
-        <b>SISTEMA PLANEJAR ELITE V8.1</b><br>
+        <b>SISTEMA PLANEJAR ELITE V8.2</b><br>
         Desenvolvido por José Victor Souza Gallo • CEIEF Rafael Affonso Leite © {datetime.now().year}
     </div>
 """, unsafe_allow_html=True)
